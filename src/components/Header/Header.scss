@@ -1,0 +1,126 @@
+@use "../../variables-and-mixins/screen-width.scss" as *;
+header{
+    box-shadow: 0 20px 20px rgba(0,0,0,.2);
+    position: fixed;
+    top: 0;
+    display: flex;
+    align-items: center;
+    width: 100vw;
+    justify-content: space-between;
+    padding:15px 4px;
+    @media (min-width:$w510) {
+        padding: 15px 25px;
+    }
+    .logo{
+        position: relative;
+        box-shadow: 1px 1px 13px rgba(0,0,0,.3) ;
+        border-radius: 15px;
+        img{
+            width: 188px; 
+            height: 135px;   
+            @media (min-width:$w510) {
+                width: 300px;
+            }
+        }
+        .title{
+            position: absolute;
+            bottom:7px;
+            right: 3px;
+            color:rgb(55, 182, 210);
+            font-weight: bold;
+            font-size: 8px;
+            @media (min-width:$w510) {
+                font-size: 13px; 
+            }
+        }
+    }
+}
+.main-header{
+    background-color: #faf9f5;
+}
+.search-header{
+    background-color:#10abd9;
+    z-index: 2;
+    height: 0;
+    padding: 0;
+    transition: height 0.1s ease;
+    overflow: hidden;
+    button{
+        border: none;
+        background-color: transparent;
+    }
+    .search-books-container{
+        min-width: 85%;
+        display: flex;
+        margin: auto;
+        button{
+            border: none;
+        }
+    }
+    @media (min-width:$w1100) {
+        display: none;
+    }
+}
+.search-books-container{
+    display: none;
+    @media (min-width:$w1100) {
+        display: flex;
+    }
+    width: 48%;
+    min-width: 601px;
+    height: 68px;
+    justify-content: space-between;
+    align-items: center;
+    padding:4px;
+    input{
+        width: 90%;
+        height: 100%;
+        border-radius: 15px;
+        border: 3px solid rgb(16, 188, 188);
+        font-size: 30px;
+        padding: 0 20px;
+        &:focus{
+            outline: none;
+        }
+    }
+    button{
+        height: 48px;
+        width:50.42px;
+        border-radius: 20px;
+        border: 1px solid rgb(16, 188, 188);
+        background-color: transparent;
+    }
+}
+.header-left-buttons-container{
+    display: flex;
+    & >:nth-child(2){
+        @media (min-width:$w1100) {
+            display: none;
+        }
+    }
+    button{
+        cursor: pointer;
+        width: 70px;
+        height: 70px;
+        border: none;
+        background-color: transparent;
+    }
+}
+.header-shop-cart{
+    &>:first-child{
+        margin-left:22px ;
+    }
+    div{
+        font-weight: bold;
+        height: 25%;
+        display: flex;
+        gap:5px;
+    }
+    img{
+      height: 100%;
+      width: 30%; 
+    }
+}
+.height168{
+    height: 168px;
+}
