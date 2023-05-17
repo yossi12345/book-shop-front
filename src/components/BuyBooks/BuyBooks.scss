@@ -1,0 +1,22 @@
+@use "src/variables-and-mixins/screen-width.scss" as *;
+.big-cart{
+    margin: 208px 50px 0 0;
+    text-align: start;
+    background-color: transparent;
+    border: none;
+    @media (min-width:$w1100) {
+        display: block;
+        margin: 208px auto 0;
+    }
+    div{
+        display: flex;
+        align-items: center;
+        gap:20px;
+        font-size: 70px;
+        font-weight: 600;
+    }
+    img{
+        width:100px;
+        height: 100px;
+    }
+}

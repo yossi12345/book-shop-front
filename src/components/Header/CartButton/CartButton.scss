@@ -1,0 +1,21 @@
+.cart-btn{
+    &>:last-child{
+       display: none;
+    }
+    div{
+        font-weight: bold;
+        height: 25%;
+        display: flex;
+        gap:5px;
+    }
+    img{
+      height: 100%;
+      width: 30%; 
+    }
+}
+.active-cart-btn{
+    &>:first-child{
+        display: none;
+    }
+    
+}

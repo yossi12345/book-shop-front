@@ -1,0 +1,59 @@
+@use "src/variables-and-mixins/screen-width.scss" as *;
+.login-modal{
+    background-color: white;
+    height: 340px;
+    width: 310px;
+    border: 5px solid black;
+    position: relative;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding:45px 12px 7px 12px;//12
+    &>:nth-child(3){
+        border-bottom: 2px dashed blue;
+    }
+    form{
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap:4px;
+        padding-bottom: 3px;
+        width: 100%;
+    }
+    @media (min-width:$w750) {
+        align-items: center;
+        height: 650px;
+        width: 650px;
+        padding-top: 75px;   
+    }
+}
+.submit-button{
+    margin:5px auto 5px;
+    background-color: greenyellow;
+    border: 2px solid rgb(216, 113, 113);
+    width: fit-content;
+    @media (min-width:$w750) {
+        font-size: 30px;
+    }
+}
+.fail-reason-sign-up,.fail-reason-login{
+    margin: 0 auto;
+    position: absolute;
+    width: fit-content;
+    height: 5px;
+    color: red;
+}
+.fail-reason-login{
+    top:3px;
+    @media (min-width:$w750) {
+        top:19px;
+    }
+}
+.fail-reason-sign-up{
+    top:130px;
+    @media (min-width:$w750) {
+        top:255px;
+    }
+
+}

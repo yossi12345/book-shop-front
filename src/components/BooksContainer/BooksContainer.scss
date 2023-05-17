@@ -1,0 +1,37 @@
+.books-container{
+    margin: auto;
+    margin: 230px auto 0;
+    width: 90vw;
+
+}
+.books-nav{
+    width:fit-content;
+    height: fit-content;
+    margin: auto;
+    border: 2px solid gray;
+    padding: 10px;
+    display: flex;
+    gap:15px;
+    align-items: center;
+    flex-wrap: wrap;
+    font-size: 20px;
+    font-weight: 500;
+    .select-container{
+        display: flex;
+        align-items: center;
+        gap:10px;
+        div{
+            width: 80px;
+        }
+    }
+    select{
+        font-size: 20px;
+        width: 190px;
+        padding: 7px;
+        border-radius: 20px;
+        font-weight: bold;
+        option{
+            font-size: 20px; 
+        }
+    }
+}

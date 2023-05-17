@@ -1,0 +1,27 @@
+@use "../../../variables-and-mixins/screen-width.scss" as *;
+.modal-input{
+    display: flex;
+    font-size: 13px;
+    width: fit-content;
+    @media (min-width:$w750) {
+        height: 50px; 
+        font-size: 20px;
+        align-items: center;
+    }
+    div{
+        width: 70px;
+        @media (min-width:$w750) {
+            width: 100px;
+        }
+    }
+    input{
+        height: 20px;
+        &::placeholder{
+            color: red;
+        }
+        @media (min-width:$w750) {
+            height: 40px;
+            width: 250px;
+        }
+    }
+}
