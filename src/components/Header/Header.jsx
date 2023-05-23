@@ -6,14 +6,13 @@ import {GiEntryDoor} from "react-icons/gi"
 import {FaArrowRight} from "react-icons/fa"
 import { useState } from "react"
 import BooksSearcher from "./BooksSearcher"
-import jwtDecode from 'jwt-decode';
 import CartButton from "./CartButton/CartButton"
+import { useContext } from "react"
+import { Role } from "../RoleContext1"
 function Header(props){
-    // console.log(jwtDecode(
-    //     localStorage.getItem("token")
-    //     )
-    // )
+    const role=useContext(Role)
     const [shouldSearchHeaderOpen,setShouldSearchHeaderOpen]=useState(false)
+    console.log(role)
     return (
         <> 
             <header className={"search-header"+(shouldSearchHeaderOpen?" height168":"")}>
@@ -33,18 +32,38 @@ function Header(props){
                 </div>
                 <BooksSearcher/>
                 <div className="header-left-buttons-container">
+                {role==="admin"?
+                    <button className="not-icon-btn create-book-btn" onClick={()=>{
+                        props.setShouldCreateBookModalOpen(true)
+                    }}>
+                        צור ספר חדש
+                    </button>:
+
                    <CartButton setShouldPayModalOpen={props.setShouldPayModalOpen}/>
-                    <button onClick={()=>{
+                }
+                {role==="admin"&&
+                    <button className="not-icon-btn" onClick={()=>{
+                        props.setShouldDeleteUserModalOpen(true)
+                    }}>
+                        מחק משתמש
+                    </button>
+                }
+                    <button className="left-search-books-btn" onClick={()=>{
                          const shouldSearchHeaderOpenCopy=shouldSearchHeaderOpen
                          setShouldSearchHeaderOpen(!shouldSearchHeaderOpenCopy)
                     }}>
                         <AiOutlineSearch size="100%"/>
                     </button>
-                    <button onClick={()=>{
-                        props.setLoginModalShouldOpen(true)
-                    }}>
-                        <RxPerson size="100%"/>
-                    </button>
+                    {role==="guest"?
+                        <button onClick={()=>{
+                            props.setLoginModalShouldOpen(true)
+                        }}>
+                            <RxPerson size="100%"/>
+                        </button>:
+                        <button>
+                            <GiEntryDoor size="100%"/>
+                        </button>
+                    }
                 </div>
             </header>
         </>

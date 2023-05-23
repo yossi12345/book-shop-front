@@ -2,9 +2,9 @@ import "./ModalInput.scss"
 function ModalInput(props){
     return (
         <div className="modal-input">
-            <div>
+            <label>
                 {props.label}
-            </div>
+            </label>
             <input type={props.isPassword?"password":"text"} ref={props.inputRef}/>
         </div>
     )

@@ -3,6 +3,8 @@
     background-color: purple;
     height: 400px;
     width: 95vw;
+    min-width: 340px;
+    position: relative;
     form{
         color: white;
         font-weight: bold;
@@ -16,9 +18,22 @@
         div{
             display: flex;
             gap:4px;
-            label{
-                width: 100px;
-            }
         }
+    }
+    input{
+        &::placeholder{
+            color: red;
+        }
+    }
+    .login-fail-message-container{
+        position: absolute;
+        width: 100%;
+        text-align: center;
+        right: 0;
+        top:5px;
+        color: rgb(255, 0, 60);
+    }
+    label{
+        width: 100px;
     }
 }

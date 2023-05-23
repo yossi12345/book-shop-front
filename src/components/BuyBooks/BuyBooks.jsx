@@ -7,7 +7,9 @@ function BuyBooks(props){
             <div onClick={()=>{
                 props.setShouldPayModalOpen(true)
             }}>
+                
                 <Cart cartSize={350} containerClass="big-cart"/>
+                
             </div>
         </div>
     )

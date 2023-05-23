@@ -6,9 +6,9 @@ function CartButton(props){
     return (
         <NavLink to="/buy-books" className={({isActive})=>(isActive?"active-cart-btn":"cart-btn")}>
             <Cart cartSize={30}/>
-           <button onClick={()=>{
+            <button onClick={()=>{
                 props.setShouldPayModalOpen(true)
-           }}>
+            }}>
                 <TbPigMoney size={60}/>
             </button>
         </NavLink>

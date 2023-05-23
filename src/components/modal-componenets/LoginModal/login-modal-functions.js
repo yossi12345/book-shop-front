@@ -1,6 +1,7 @@
 import axios from "axios";
 import validator from "validator"
-export async function handleLogin(inputsRefs,setFailLoginReson){
+import { SetRole } from "../../RoleContext1";
+export async function handleLogin(inputsRefs,setFailLoginReson,closeModal){
     const wrongDetailsMessage="האימייל או הסיסמא שגויים"
     const email=inputsRefs.email.value.trim()
     const password=inputsRefs.password.value
@@ -14,12 +15,12 @@ export async function handleLogin(inputsRefs,setFailLoginReson){
             password
         }, {
             headers: {
-              'Authorization': 'Bearer your_token',
               'Content-Type': 'application/json',
             }})
         localStorage.setItem("token",token)
+        SetRole("user")
         console.log(token)
-        //window.location.reload()
+        closeModal()
     }
     catch(err){
         if (err.response.status===500)
@@ -28,7 +29,7 @@ export async function handleLogin(inputsRefs,setFailLoginReson){
             setFailLoginReson(wrongDetailsMessage)     
     }
 } 
-export async function handleSignIn(inputsRefs,setFailSignUpReson){
+export async function handleSignIn(inputsRefs,setFailSignUpReson,closeModal){
     const inputs={
         age:inputsRefs.age.value.trim(),
         email:inputsRefs.email.value.trim(),
@@ -48,11 +49,11 @@ export async function handleSignIn(inputsRefs,setFailSignUpReson){
             username:inputs.username
         }, {
             headers: {
-              'Authorization': 'Bearer your_token',
               'Content-Type': 'application/json',
             }})
-        localStorage.setItem("token",token)
-        window.location.reload()
+        sessionStorage.setItem("token",token)
+        SetRole("user")
+        closeModal()
     }
     catch(err){
         if (err.response.status===500)

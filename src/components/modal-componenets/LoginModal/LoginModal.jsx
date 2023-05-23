@@ -31,7 +31,7 @@ function LoginModal({setLoginModalShouldOpen}){
                             handleLogin({
                                 email:loginEmailRef.current,
                                 password:loginpasswordRef.current
-                            },setFailLoginReason)
+                            },setFailLoginReason,()=>{setLoginModalShouldOpen(false)})
                         }}
                     >
                             התחברות
@@ -53,7 +53,7 @@ function LoginModal({setLoginModalShouldOpen}){
                                 password:signUpPasswordRef.current,
                                 passwordAgain:signUpPasswordAgainRef.current,
                                 email:signUpEmailRef.current
-                            },setFailSignUpReason)
+                            },setFailSignUpReason,()=>{setLoginModalShouldOpen(false)})
                         }}
                     >
                             הרשמה

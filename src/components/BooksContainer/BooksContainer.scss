@@ -1,4 +1,4 @@
-.books-container{
+.nav-and-books-container{
     margin: auto;
     margin: 230px auto 0;
     width: 90vw;
@@ -7,7 +7,7 @@
 .books-nav{
     width:fit-content;
     height: fit-content;
-    margin: auto;
+    margin:0 auto 40px;
     border: 2px solid gray;
     padding: 10px;
     display: flex;
@@ -34,4 +34,10 @@
             font-size: 20px; 
         }
     }
+}
+.books-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap:15px;
 }
