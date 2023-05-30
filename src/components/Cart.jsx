@@ -10,13 +10,12 @@ function Cart({containerClass,cartSize}){
     const role=useContext(Role)
     const [totalPrice,setTotalPrice]=useState(0)
     useEffect(()=>{
-        let newTotalPrice=0
-        cartItems.forEach(book => {
-            newTotalPrice+=getActualBookPrice(book,role)
-        })
+        const newTotalPrice=cartItems.reduce((accumulator,book)=>(
+            accumulator+getActualBookPrice(book,role)
+        ),0)
         setTotalPrice(newTotalPrice)
     },[cartItems,role])
-    console.log(cartItems)
+    // console.log(cartItems)
     return (
         <button className={containerClass}>
             <GiShoppingCart size={cartSize}/>
@@ -26,7 +25,7 @@ function Cart({containerClass,cartSize}){
             </div>
             <div>
                 <img src={shekelSign} alt="total price"/>
-                {totalPrice}
+                {totalPrice.toLocaleString("en-US",{maximumFractionDigits:2})}
             </div>
         </button>
     )

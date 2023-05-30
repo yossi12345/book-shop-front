@@ -13,10 +13,10 @@ function DeleteUserModal(props){
                 <form>
                     <ModalInput label="האימייל של היוזר למחיקה"/>
                     <ModalInput label="הסיסמה שלך" isPassword={true}/>
-
                     <button className="submit-button" 
-                        onClick={(event)=>{
+                        onClick={async(event)=>{
                             event.preventDefault()
+                            
                         }}
                     >
                             מחק משתמש

@@ -6,6 +6,7 @@ import "./CreateBookModal.scss"
 import { useNavigate } from "react-router-dom"
 import { Role, SetRole } from "../../RoleContext1"
 import axios from "axios"
+import { ROLE_TYPES } from "../../../global-constants"
 function CreateBookModal(props){
     const navigate=useNavigate()
     const role=useContext(Role)
@@ -22,7 +23,7 @@ function CreateBookModal(props){
     const firstChapterRef=useRef(null)
     const bookCoverRef=useRef(null)
     async function handleCreateBook(){
-        if (!sessionStorage.getItem("token")||role!=="admin"){
+        if (!sessionStorage.getItem("token")||role!==ROLE_TYPES.admin){
             handleAuthFaild()
             return
         }
@@ -45,7 +46,7 @@ function CreateBookModal(props){
                 firstChapter:inputs.firstChapter===""?undefined:inputs.firstChapter,
             }
             console.log("SHTUT",obj)
-            const {data:book}=await axios.post("http://localhost:5000/new-book",{
+            const {data:book}=await axios.post(process.env.REACT_APP_BASIC_URL+"new-book",{
                 ...inputs,
                 discount:inputs.discount===""?undefined:inputs.discount,
                 firstChapter:inputs.firstChapter===""?undefined:inputs.firstChapter,

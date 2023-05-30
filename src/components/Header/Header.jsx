@@ -1,72 +1,62 @@
 import "./Header.scss"
 import Logo from "../../images/logo.png"
-import {AiOutlineSearch} from "react-icons/ai"
 import {RxPerson} from "react-icons/rx"
 import {GiEntryDoor} from "react-icons/gi"
-import {FaArrowRight} from "react-icons/fa"
-import { useState } from "react"
-import BooksSearcher from "./BooksSearcher"
 import CartButton from "./CartButton/CartButton"
 import { useContext } from "react"
-import { Role } from "../RoleContext1"
+import { Role,SetRole } from "../RoleContext1"
+import { GUEST_NAME, ROLE_TYPES } from "../../global-constants"
+import { useNavigate,NavLink } from "react-router-dom"
 function Header(props){
+    const navigate=useNavigate()
+    const setRole=useContext(SetRole)
     const role=useContext(Role)
-    const [shouldSearchHeaderOpen,setShouldSearchHeaderOpen]=useState(false)
-    console.log(role)
-    return (
-        <> 
-            <header className={"search-header"+(shouldSearchHeaderOpen?" height168":"")}>
-                <button onClick={()=>{
-                    const shouldSearchHeaderOpenCopy=shouldSearchHeaderOpen
-                    setShouldSearchHeaderOpen(!shouldSearchHeaderOpenCopy)
-                }}>
-                    <FaArrowRight size={35} color="white"/>
-                </button>
-                <BooksSearcher/>
-            </header>
-            
-            <header>
-                <div className="logo">
-                    <img src={Logo} alt="books-tree"/>
-                    <div className="title">אולי ספרים לא יכולים לגדול על עצים אבל אתם כן</div>
-                </div>
-                <BooksSearcher/>
-                <div className="header-left-buttons-container">
-                {role==="admin"?
-                    <button className="not-icon-btn create-book-btn" onClick={()=>{
-                        props.setShouldCreateBookModalOpen(true)
-                    }}>
-                        צור ספר חדש
-                    </button>:
-
-                   <CartButton setShouldPayModalOpen={props.setShouldPayModalOpen}/>
+    return ( 
+        <header>
+            <div className="logo">
+                <img src={Logo} alt="books-tree"/>
+                <div className="title">אולי ספרים לא יכולים לגדול על עצים אבל אתם כן</div>
+            </div>
+            <div className="hi-username">
+                שלום
+                <br/>
+                {" "+props.username}<br/>
+                {role===ROLE_TYPES.admin?" המנהל":""}
+            </div>
+            <div className="header-left-buttons-container">
+                {role===ROLE_TYPES.admin?
+                    <NavLink to="/create-book" className={({isActive})=>(isActive?"none":"")}>
+                        <button className="not-icon-btn">
+                            צור
+                            ספר
+                            חדש
+                        </button>
+                    </NavLink>:
+                    <CartButton setShouldPayModalOpen={props.setShouldPayModalOpen}/>
                 }
-                {role==="admin"&&
+                {role===ROLE_TYPES.user&&
                     <button className="not-icon-btn" onClick={()=>{
                         props.setShouldDeleteUserModalOpen(true)
                     }}>
                         מחק משתמש
                     </button>
                 }
-                    <button className="left-search-books-btn" onClick={()=>{
-                         const shouldSearchHeaderOpenCopy=shouldSearchHeaderOpen
-                         setShouldSearchHeaderOpen(!shouldSearchHeaderOpenCopy)
+                {role===ROLE_TYPES.guest?
+                    <button onClick={()=>{
+                        props.setLoginModalShouldOpen(true)
                     }}>
-                        <AiOutlineSearch size="100%"/>
+                        <RxPerson size="100%"/>
+                    </button>:
+                    <button onClick={()=>{
+                        setRole(ROLE_TYPES.guest)
+                        props.setUsername(GUEST_NAME)
+                        sessionStorage.removeItem("token")
+                    }}>
+                        <GiEntryDoor size="100%"/>
                     </button>
-                    {role==="guest"?
-                        <button onClick={()=>{
-                            props.setLoginModalShouldOpen(true)
-                        }}>
-                            <RxPerson size="100%"/>
-                        </button>:
-                        <button>
-                            <GiEntryDoor size="100%"/>
-                        </button>
-                    }
-                </div>
-            </header>
-        </>
+                }
+            </div>
+        </header>
     )
 }
 export default Header

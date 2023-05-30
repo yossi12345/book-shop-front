@@ -2,12 +2,35 @@ import "./CartButton.scss"
 import {NavLink} from "react-router-dom"
 import {TbPigMoney} from "react-icons/tb"
 import Cart from "../../Cart"
+import { useContext } from "react"
+import { CartItems } from "../../CartItemsContext/CartItemsContext"
 function CartButton(props){
+    const cartItems=useContext(CartItems)
+    function cantUserBuyBook(book){
+        return book.deleted||!book.available
+    }
     return (
         <NavLink to="/buy-books" className={({isActive})=>(isActive?"active-cart-btn":"cart-btn")}>
-            <Cart cartSize={30}/>
+            <span onClick={()=>{
+                if (!cartItems.some(cantUserBuyBook))
+                    return
+                const mozart=new Audio("/mozart_34.m4a")
+                mozart.play()   
+            }}>
+                <Cart cartSize={30}/>
+            </span>
             <button onClick={()=>{
-                props.setShouldPayModalOpen(true)
+                if (cartItems.length===0){
+                    alert("העגלה שלך ריקה")
+                    return
+                }
+                if (!cartItems.every(cantUserBuyBook)){
+                    props.setShouldPayModalOpen(true)
+                    return 
+                }
+                alert("כל הספרים בעגלה שלך לא זמינים או שנמחקו לגמרי")
+                const mozart=new Audio("/mozart_34.m4a")
+                mozart.play()
             }}>
                 <TbPigMoney size={60}/>
             </button>

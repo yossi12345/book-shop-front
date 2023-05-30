@@ -1,24 +1,23 @@
 import { createContext, useEffect, useState } from "react"
-import {AES} from "crypto-js"
-import handleSetCartItemsFirstValue from "./cartItemsContext-function"
+import {handleSetCartItemsFirstValue,  setHashCartItems } from "./cartItemsContext-function"
+import { useContext } from "react"
+import { Role } from "../RoleContext1"
+import { ROLE_TYPES } from "../../global-constants"
+
 export const CartItems=createContext()
 export const SetCartItems=createContext()
+
 function CartItemsContext({children}){
+    const role=useContext(Role)
     const [cartItems,setCartItems]=useState([])
   
     useEffect(()=>{
-        handleSetCartItemsFirstValue(setCartItems)
+        if (role!==ROLE_TYPES.admin)
+            handleSetCartItemsFirstValue(setCartItems)
     },[])
+
     useEffect(()=>{
-        let newHashCartItems=""
-        const secret=process.env.REACT_APP_CART_SECRET
-        cartItems.forEach((book,i)=>{
-            newHashCartItems+=book._id
-            if (i+1!==cartItems.length)
-                newHashCartItems+=";;"
-        })
-        newHashCartItems=AES.encrypt(newHashCartItems,secret).toString()
-        localStorage.setItem("hashCartItems",newHashCartItems)
+        setHashCartItems(cartItems)
     },[cartItems])
 
     return (

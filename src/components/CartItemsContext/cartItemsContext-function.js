@@ -1,6 +1,20 @@
 import {AES,enc} from "crypto-js"
 import axios from "axios"
-async function handleSetCartItemsFirstValue(setCartItems){
+
+const deletedBook={
+    _id:"id1",
+    name:"",
+    author:"",
+    description:"",
+    available:false,
+    price:0,
+    discount:0,
+    bookCover:"/book-images/not-exist-book.PNG",
+    genre:"",
+    deleted:true
+}
+
+export async function handleSetCartItemsFirstValue(setCartItems){
     const secret=process.env.REACT_APP_CART_SECRET
     const hashCartItems=localStorage.getItem("hashCartItems")
     const newCartItems=[]
@@ -15,13 +29,11 @@ async function handleSetCartItemsFirstValue(setCartItems){
         return
     }
     const _idArrayOfCartItems=cartItemsString.split(";;")
-    let isAtLeastOneBookUnavailable=false
-    let isAtLeastOneBookDeletedCompletely=false
     for (let i=0;i<_idArrayOfCartItems.length;i++){
+        const url=process.env.REACT_APP_BASIC_URL+"get?_id="+_idArrayOfCartItems[i]
         try{
-            const {data:book}=await axios.get("http://localhost:5000/get?_id="+_idArrayOfCartItems[i])
-            if (book.available)
-                newCartItems.push(book)
+            const {data:book}=await axios.get(url)
+            newCartItems.push(book)
         }catch(err){
             if (!err.response){
                 alert("יוסי תדליק ת'שרת תעשה טובה")
@@ -29,24 +41,25 @@ async function handleSetCartItemsFirstValue(setCartItems){
                 return
             }  
             else if (err.response.status===500){
-                alert("סטטוס 500 לא רוצה לשאול את דימיטרי מה לעשות")
                 console.log(err)
                 return 
             }
-            else if (err.response.status===404){
-                if (err.response.data.book.available===false)
-                    isAtLeastOneBookUnavailable=true
-                else
-                    isAtLeastOneBookDeletedCompletely=true
-            }
+            else if (err.response.status===404)
+                newCartItems.push(deletedBook)
+            
             console.log(err)
         }
     }
     setCartItems(newCartItems)
-    if (isAtLeastOneBookDeletedCompletely){
-        alert("אנחנו מצטערים אבל חלק מספרים ששמת בעגלה לא נמצאים אצלנו עוד")
-    }
-    if (isAtLeastOneBookUnavailable)
-        alert("אנחנו מצטערים אבל חלק מהספרים ששמת בעגלה לא זמינים למכירה כרגע")
 }
-export default handleSetCartItemsFirstValue
+export function setHashCartItems(cartItems){
+    let newHashCartItems=""
+    const secret=process.env.REACT_APP_CART_SECRET
+    cartItems.forEach((book,i)=>{
+        newHashCartItems+=book._id
+        if (i+1!==cartItems.length)
+            newHashCartItems+=";;"
+    })
+    newHashCartItems=AES.encrypt(newHashCartItems,secret).toString()
+    localStorage.setItem("hashCartItems",newHashCartItems)
+}

@@ -18,15 +18,18 @@
         font-weight: 600;
         //line-height: 0.9;
     }
-    // .price{
-    //     font-size: 19px;
-    //     height: 13%;
-    // }
     &:hover{
         filter:brightness(45%);
         .book-buttons-container{
             height:15%;
         }
+    }
+    .unavailable-img{
+        position: absolute;
+        top:150px;
+        right: 43px;
+        width: 55%;
+        height: 20%;
     }
 }
 .book-buttons-container{
@@ -35,6 +38,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    gap:6px;
     height: 0;
     width: 100%;
     transition: all 0.35s linear;
@@ -44,5 +48,14 @@
         cursor: pointer;
         background-color: transparent;
         border: none;
+    }
+    .not-icon-btn{
+        background-color: greenyellow;
+        outline: 1.5px solid red;
+        font-weight: bold;
+        width: min-content;
+        line-height: 0.95;
+        font-size: 11px;
+        padding: 2px;
     }
 }

@@ -1,0 +1,47 @@
+@use "src/variables-and-mixins/screen-width.scss" as *;
+.search-books-container{
+    display: flex;
+    height: 68px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding:4px;
+    position: relative;
+    input{
+        width: 90%;
+        height: 100%;
+        border-radius: 15px;
+        border: 3px solid rgb(16, 188, 188);
+        font-size: 30px;
+        padding: 0 20px;
+        &:focus{
+            outline: none;
+        }
+    }
+    button{
+        height: 48px;
+        width:50.42px;
+        border-radius: 20px;
+        border: 1px solid rgb(16, 188, 188);
+        background-color: transparent;
+    }
+}
+.possible-book-names-container{
+    position: absolute;
+    top:97%;
+    width:calc(100% - 50.42px);
+    z-index: 2;
+    border:2px dashed aqua;
+    background-color: black;
+    div{
+        background-color: white;
+        border-bottom:2px dashed aqua;
+        width: 100%;
+        font-size: 13px;
+        padding:7px;
+        cursor: pointer;
+        &:hover{
+            background-color: gold;
+        }
+    }
+}

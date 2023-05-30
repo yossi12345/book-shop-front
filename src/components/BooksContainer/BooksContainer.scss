@@ -1,18 +1,20 @@
-.nav-and-books-container{
+.nav-and-books-and-pages-container{
     margin: auto;
     margin: 230px auto 0;
     width: 90vw;
-
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
 }
 .books-nav{
     width:fit-content;
     height: fit-content;
-    margin:0 auto 40px;
+    margin:0 auto 0px;
     border: 2px solid gray;
     padding: 10px;
     display: flex;
-    gap:15px;
     align-items: center;
+    flex-direction: column;
     flex-wrap: wrap;
     font-size: 20px;
     font-weight: 500;
@@ -30,6 +32,7 @@
         padding: 7px;
         border-radius: 20px;
         font-weight: bold;
+        margin-top: 15px;
         option{
             font-size: 20px; 
         }
@@ -40,4 +43,9 @@
     flex-wrap: wrap;
     justify-content: center;
     gap:15px;
+}
+.pages{
+    text-align: center;
+    direction: ltr;
+    margin-bottom: 30px;
 }

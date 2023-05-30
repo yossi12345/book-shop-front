@@ -2,35 +2,39 @@ import { useRef,useState } from "react"
 import CloseModalBtn from "../CloseModalBtn/CloseModalBtn"
 import ModalContainer from "../ModalContainer/ModalContainer"
 import "./PayModal.scss"
+import { useContext } from "react"
+import { CartItems, SetCartItems } from "../../CartItemsContext/CartItemsContext"
 function PayModal(props){
+    const setCartItems=useContext(SetCartItems)
+    const cartItems=useContext(CartItems)
     const inputsRefs=useRef([])
-    const [failBuyingMessage,setBuyingMessage]=useState(null)
+    const [failBuyingMessage,setFailBuyingMessage]=useState(null)
     async function handlePay(event){
         event.preventDefault()
         const inputs=[]
         inputsRefs.current.forEach((inputRef)=>{ 
             const input=inputRef.value.trim()
-            if (!(/^[1-9]\d*$/.test(input))){
-                const message=input===""?"*שדה חובה":"*יש להכניס מספרים בלבד"
-               inputRef.value=""
-               inputRef.setAttribute("placeholder",message)
-            }
-            else
+            if (/^[1-9]\d*$/.test(input)){
                 inputs.push(input) 
+                return
+            }
+            const message=input===""?"*שדה חובה":"*יש להכניס מספרים בלבד"
+            inputRef.value=""
+            inputRef.setAttribute("placeholder",message)
         })
         if (inputs.length!==4)
             return
         const buyingSucceed=await buyBooks()
         if (!buyingSucceed){
-            setBuyingMessage("אנחנו מצטערים לא הצלחנו לבצע את הקנייה")
+            setFailBuyingMessage("אנחנו מצטערים לא הצלחנו לבצע את הקנייה")
             return
         }
-        //לרוקן את העגלה
+        const newCartItems=cartItems.filter(book=>(book.deleted||!book.available))
+        setCartItems(newCartItems)
         props.setShouldPayModalOpen(false)
         props.setShouldRunConfetti(true)
-        setBuyingMessage("הקנייה הצליחה")
         setTimeout(()=>{
-            setBuyingMessage(null)
+            setFailBuyingMessage(null)
             props.setShouldRunConfetti(false)
         },7000)      
         async function buyBooks(){

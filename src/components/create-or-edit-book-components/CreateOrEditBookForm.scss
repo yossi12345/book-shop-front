@@ -1,0 +1,50 @@
+@use "src/variables-and-mixins/screen-width.scss" as *;
+.create-book-form{
+    background-color: gold;
+    margin: 250px auto 20px;
+    padding: 10px;
+    height: fit-content;
+    width: 400px;
+    table{
+        border-spacing: 10px;
+    }
+    input{
+        height: 26px;
+        &::placeholder{
+            color: red;
+            font-size: 10px;
+        }
+    }
+    label{
+        display: block;
+        text-align: center;
+        font-weight: 600;
+    }
+    textarea{
+        height: 80px;
+        &::placeholder{
+            color: red;
+            font-size: 15px;
+        }
+    }
+    .all-screen{
+        font-size: 35px;
+        width: calc(100vw - 30px);
+        height: calc(100vh - 20px);
+        position: fixed;
+        right:15px;
+        z-index: 20;
+        top: 10px;
+        @media (min-width:$w510) {
+            right: 25px;
+            width: calc(100vw - 50px);    
+        }
+    }   
+}
+.submit-button-container{
+    display: flex;
+    justify-content: center;
+    button{
+        font-size: 20px;
+    }
+}

@@ -38,58 +38,10 @@ header{
         }
     }
 }
-.search-header{
-    background-color:#10abd9;
-    z-index: 10;
-    height: 0;
-    padding: 0;
-    transition: height 0.1s ease;
-    overflow: hidden;
-    button{
-        border: none;
-        background-color: transparent;
-    }
-    .search-books-container{
-        min-width: 85%;
-        display: flex;
-        margin: auto;
-        button{
-            border: none;
-        }
-    }
-    @media (min-width:$w1100) {
-        display: none;
-    }
-}
-.search-books-container{
-    display: none;
-    @media (min-width:$w1100) {
-        display: flex;
-    }
-    width: 48%;
-    min-width: 601px;
-    height: 68px;
-    justify-content: space-between;
-    align-items: center;
-    padding:4px;
-    input{
-        width: 90%;
-        height: 100%;
-        border-radius: 15px;
-        border: 3px solid rgb(16, 188, 188);
-        font-size: 30px;
-        padding: 0 20px;
-        &:focus{
-            outline: none;
-        }
-    }
-    button{
-        height: 48px;
-        width:50.42px;
-        border-radius: 20px;
-        border: 1px solid rgb(16, 188, 188);
-        background-color: transparent;
-    }
+.hi-username{
+    font-weight: 700;
+    font-size: 25px;
+    text-align: center;
 }
 .header-left-buttons-container{
     display: flex;
@@ -113,13 +65,7 @@ header{
         outline: 4px ridge red;
         line-height:0.95;
         padding: 2px;
-        width: 70px;
+        width:min-content;
         margin-right: 10px;
     }
-    .create-book-btn{
-        width:60px
-    }
-}
-.height168{
-    height: 168px;
 }
