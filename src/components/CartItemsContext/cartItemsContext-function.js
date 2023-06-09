@@ -35,19 +35,16 @@ export async function handleSetCartItemsFirstValue(setCartItems){
             const {data:book}=await axios.get(url)
             newCartItems.push(book)
         }catch(err){
+            console.log(err)
             if (!err.response){
                 alert("יוסי תדליק ת'שרת תעשה טובה")
-                console.log(err)
                 return
             }  
             else if (err.response.status===500){
-                console.log(err)
                 return 
             }
             else if (err.response.status===404)
-                newCartItems.push(deletedBook)
-            
-            console.log(err)
+                newCartItems.push(deletedBook)    
         }
     }
     setCartItems(newCartItems)

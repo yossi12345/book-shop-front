@@ -11,10 +11,8 @@ function BooksSearcher(props){
                 onBlur={()=>{
                     setShouldPossibleBookNamesOpen(false)
                 }}
-                onFocus={(event)=>{
+                onFocus={()=>{
                     setShouldPossibleBookNamesOpen(true)
-                    props.setInputValue(event.target.value)
-
                 }}
                 onChange={(event)=>{
                     props.setInputValue(event.target.value)
@@ -41,7 +39,7 @@ function BooksSearcher(props){
                 newState.page=1
                 props.setState(newState)
             }}>
-                <AiOutlineSearch size={40} color="#000060"/>
+                <AiOutlineSearch size={32} color="#000060"/>
             </button>
         </form>
     )

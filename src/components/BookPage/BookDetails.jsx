@@ -3,18 +3,30 @@ import {MdOutlineAddShoppingCart} from "react-icons/md"
 import {ImEye} from "react-icons/im"
 import { ROLE_TYPES } from "../../global-constants"
 import { Role, SetRole } from "../RoleContext1"
-import { useContext } from "react"
+import { useContext ,useRef} from "react"
 import {BsCartDash} from "react-icons/bs"
 import { CartItems, SetCartItems } from "../CartItemsContext/CartItemsContext"
 import { useNavigate } from "react-router-dom"
 import { handleUpdateBook } from "../handleUpdateBook"
 import axios from "axios"
-function BookDetails({book,setShouldFirstChapterModalOpen}) {
+import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
+import { handleDeleteBook } from "../handleDeleteBook"
+import { createDiscount } from "../createDiscount"
+function BookDetails({book,setShouldFirstChapterModalOpen,deleteBookRealTime,updateBookRealTime}) {
     const cartItems=useContext(CartItems)
     const setCartItems=useContext(SetCartItems)
     const role=useContext(Role)
     const setRole=useContext(SetRole)
+    const setGenericModalParams=useContext(SetGenericModalParams)
+    const discountInputRef=useRef(null)
     const navigate=useNavigate()
+    const params={
+        setRole,
+        navigate,
+        book,
+        updateBookRealTime,
+        setGenericModalParams
+    }
     return (
         <>
             <div>
@@ -28,12 +40,12 @@ function BookDetails({book,setShouldFirstChapterModalOpen}) {
             </div>
             {!book.discount>0&&
                 <div>
-                    מחיר:{" " +book.price}
+                    מחיר:{" " +book.price.toLocaleString("en-US",{maximumFractionDigits:2})}
                 </div>
             }
             {book.discount>0&&
                 <div className="discount-message">
-                    {role !== ROLE_TYPES.guest ?
+                    {role!== ROLE_TYPES.user?
                         (
                             "*על ספר זה יש הנחה של  " +
                              book.discount + 
@@ -41,9 +53,9 @@ function BookDetails({book,setShouldFirstChapterModalOpen}) {
                         ):
                         (
                             "*אתה משתמש רשום ולכן הספר הזה עולה לך " +
-                            getActualBookPrice(book, role) +
+                            getActualBookPrice(book, role).toLocaleString("en-US",{maximumFractionDigits:2}) +
                             " שקלים במקום " +
-                            book.price
+                            book.price.toLocaleString("en-US",{maximumFractionDigits:2})
                         )
                     }
                 </div>
@@ -85,31 +97,25 @@ function BookDetails({book,setShouldFirstChapterModalOpen}) {
                 <>
                    {book.discount>0?
                         <button onClick={()=>{
-                            const discountString=prompt("כתוב כאן את ההנחה שאתה רוצה באחוזים")
-                            if (!discountString)
-                                return
-                            const discount=discountString*1
-                            if (discount>=0&&discount<=100){
-                                handleUpdateBook({
-                                    update:{discount},
-                                    setRole,
-                                    navigate,
-                                    book
-                                })
-                            }
-                            
-                        }}>
-                            צור הנחה
-                        </button>:
-                        <button onClick={()=>{
-                            handleUpdateBook({
-                                update:{discount:0},
-                                setRole,
-                                navigate,
-                                book
-                            })
+                            handleUpdateBook({...params,update:{discount:0}})
                         }}>
                             בטל הנחה קיימת
+                        </button>:
+                         <button onClick={()=>{
+                            setGenericModalParams({
+                                content:
+                                    <form className="create-discount-form">
+                                        כתוב כאן את ההנחה שאתה רוצה באחוזים: 
+                                        <input ref={discountInputRef}/>    
+                                    </form>,
+                                confirmButtonContent:"צור הנחה",
+                                cancelButtonNeeded:true,
+                                confirmFunc:({closeGenericModal})=>{
+                                    createDiscount({...params,discountInputRef,closeGenericModal})
+                                }
+                            })
+                        }}>
+                            צור הנחה
                         </button>
                     }
                     <button onClick={()=>{
@@ -119,52 +125,25 @@ function BookDetails({book,setShouldFirstChapterModalOpen}) {
                     </button>
                     {book.available?
                         <button onClick={()=>{
-                            handleUpdateBook({
-                                update:{available:false},
-                                setRole,
-                                navigate,
-                                book
-                            })
+                            handleUpdateBook({...params,update:{available:false}})
                         }}>
                             הפוך ללא זמין
                         </button>:
                         <button onClick={()=>{
-                            handleUpdateBook({
-                                update:{available:true},
-                                setRole,
-                                navigate,
-                                book
-                            })
+                            handleUpdateBook({...params,update:{available:true}})
                         }}>
                             הפוך לזמין
                         </button>
                     }
-                    <button onClick={async()=>{
-                         const isAdminConfirm=window.confirm("האם אתה באמת רוצה למחוק את הספר "+book.name+"מהמאגר? *זאת פעולה בלתי הפיכה")
-                         if (!isAdminConfirm)
-                             return 
-                         const token=sessionStorage.getItem("token")
-                         try{
-                             if (!token)
-                                 throw new Error()
-                             const {data:deletedBook}=await axios.delete(process.env.REACT_APP_BASIC_URL+"delete-book?_id="+book._id,{
-                                 headers:{
-                                     'Content-Type': 'application/json',
-                                     "Authorization":"Bearer "+token
-                                 }
-                             })
-                             console.log(deletedBook)
-                             navigate("/")
-                         }catch(err){
-                             console.log(err)
-                             if (err?.response?.status===500)
-                                 alert("מצטערים לא הצלחנו להתקשר עם השרת ולכן הספר לא נמחק")
-                             else if (err?.response?.status===400){
-                                 navigate("/admin",{replace:true})
-                                 alert("התנתקת לנו אתה מוזמן להתחבר שוב")
-                                 setRole(ROLE_TYPES.guest)
-                             }
-                         }
+                    <button onClick={()=>{
+                           setGenericModalParams({
+                            content:"האם אתה באמת רוצה למחוק את הספר "+book.name+"מהמאגר? *זאת פעולה בלתי הפיכה",
+                            confirmButtonContent:"מחק ספר",
+                            cancelButtonNeeded:true,
+                            confirmFunc:({closeGenericModal})=>{
+                                handleDeleteBook({...params,closeGenericModal,deleteBookRealTime})
+                            }
+                        })
                     }}>
                         מחק ספר
                     </button>
@@ -175,7 +154,7 @@ function BookDetails({book,setShouldFirstChapterModalOpen}) {
                     תיאור:
                 </p>
                 <div className={
-                    (/[א-ת]/.test(book.description)) ? "" : "english"
+                    (/[א-ת]/.test(book.description))?"":"english"
                 }>
                     {book.description}
                 </div>

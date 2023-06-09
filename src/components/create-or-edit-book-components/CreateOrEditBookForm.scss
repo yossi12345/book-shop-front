@@ -1,7 +1,7 @@
 @use "src/variables-and-mixins/screen-width.scss" as *;
 .create-book-form{
     background-color: gold;
-    margin: 250px auto 20px;
+    margin: 130px auto 20px;
     padding: 10px;
     height: fit-content;
     width: 400px;
@@ -46,5 +46,46 @@
     justify-content: center;
     button{
         font-size: 20px;
+    }
+}
+.book-cover-row{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    font-size: 12px;
+    button{
+        font-size: 9px;
+        cursor: pointer;
+    }
+    &:hover{
+        .book-cover-image-container{
+            display: flex;
+        }
+    }
+    .input-container{
+        display: grid;
+        grid-template-rows: 100%;
+        text-decoration: underline;
+        width: 100%;
+        input{
+            cursor: pointer;
+            position: absolute;
+            opacity: 0;
+        }
+    }
+    .book-cover-image-container{
+        display: none;
+        bottom: 18px;
+        background-color: white;
+        width: 160px;
+        z-index: 20;
+        height: 160px;
+        padding: 5px;
+        border-radius: 10px;
+        position: absolute;
+        img{
+            width: 100%;
+            height: 100%;
+        }
     }
 }

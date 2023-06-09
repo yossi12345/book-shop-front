@@ -14,3 +14,9 @@ export const SORT_OPTIONS=[
     "סופר א-ת","סופר ת-א",
     "ז'אנר א-ת","ז'אנר ת-א"
 ]
+// export const GENERIC_MODAL_FUNC_TYPES={
+//     deleteUser:"delete-user",
+//     updateBook:"update-book",
+//     createDiscount:"create-discount"
+// }
+export const ADMIN_PASSWORD_REGEX=/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,}$/

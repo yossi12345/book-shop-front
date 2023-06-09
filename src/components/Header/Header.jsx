@@ -5,18 +5,20 @@ import {GiEntryDoor} from "react-icons/gi"
 import CartButton from "./CartButton/CartButton"
 import { useContext } from "react"
 import { Role,SetRole } from "../RoleContext1"
-import { GUEST_NAME, ROLE_TYPES } from "../../global-constants"
-import { useNavigate,NavLink } from "react-router-dom"
+import {  ROLE_TYPES } from "../../global-constants"
+import {Link, NavLink, useLocation, useNavigate } from "react-router-dom"
 function Header(props){
-    const navigate=useNavigate()
+    const location=useLocation()
     const setRole=useContext(SetRole)
     const role=useContext(Role)
+    const navigate=useNavigate()
     return ( 
         <header>
-            <div className="logo">
-                <img src={Logo} alt="books-tree"/>
-                <div className="title">אולי ספרים לא יכולים לגדול על עצים אבל אתם כן</div>
-            </div>
+            <Link to="/">
+                <div className="logo">
+                    <img src={Logo} alt="books-tree"/>
+                </div>
+            </Link>
             <div className="hi-username">
                 שלום
                 <br/>
@@ -34,13 +36,6 @@ function Header(props){
                     </NavLink>:
                     <CartButton setShouldPayModalOpen={props.setShouldPayModalOpen}/>
                 }
-                {role===ROLE_TYPES.user&&
-                    <button className="not-icon-btn" onClick={()=>{
-                        props.setShouldDeleteUserModalOpen(true)
-                    }}>
-                        מחק משתמש
-                    </button>
-                }
                 {role===ROLE_TYPES.guest?
                     <button onClick={()=>{
                         props.setLoginModalShouldOpen(true)
@@ -49,11 +44,23 @@ function Header(props){
                     </button>:
                     <button onClick={()=>{
                         setRole(ROLE_TYPES.guest)
-                        props.setUsername(GUEST_NAME)
                         sessionStorage.removeItem("token")
+                        const route=location.pathname.split("/")[1]
+                        const forbiddenRoutesForGuest=["create-book","edit-book","edit-account"]
+                        if (forbiddenRoutesForGuest.includes(route)) 
+                            navigate((role===ROLE_TYPES.admin?"/admin":"/"),{replace:true})
                     }}>
                         <GiEntryDoor size="100%"/>
                     </button>
+                }
+                {role!==ROLE_TYPES.guest&&
+                    <NavLink to="/edit-account" className={({isActive})=>(isActive?"none":"")}>
+                        <button className="not-icon-btn">
+                            עדכון 
+                            פרטי
+                            חשבון
+                        </button>
+                    </NavLink>
                 }
             </div>
         </header>

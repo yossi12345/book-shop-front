@@ -1,7 +1,7 @@
 import "./Book.scss"
 import {MdOutlineAddShoppingCart} from "react-icons/md"
 import {BsCartDash} from "react-icons/bs"
-import { useContext } from "react"
+import { useContext,useMemo } from "react"
 import { Role, SetRole } from "../RoleContext1"
 import getActualBookPrice from "../getActualBookPrice"
 import { CartItems, SetCartItems } from "../CartItemsContext/CartItemsContext"
@@ -9,16 +9,38 @@ import {TbTrashOff} from "react-icons/tb"
 import {BsFillTrash3Fill} from "react-icons/bs"
 import { useNavigate } from "react-router-dom"
 import { ROLE_TYPES } from "../../global-constants"
-import axios from "axios"
 import { handleUpdateBook } from "../handleUpdateBook"
 import unavailableSign from "../../images/unavailable-sign.jpg"
-function Book({book}){
+import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
+import { useRef } from "react"
+import { handleDeleteBook } from "../handleDeleteBook"
+import { createDiscount } from "../createDiscount"
+function Book({book,deleteBookRealTime,updateBookRealTime}){
+    const setGenericModalParams=useContext(SetGenericModalParams)
     const cartItems=useContext(CartItems)
     const setCartItems=useContext(SetCartItems)
     const role=useContext(Role)
     const setRole=useContext(SetRole)
+    const discountInputRef=useRef(null)
     const navigate=useNavigate()
-   
+    const params={
+        setRole,
+        navigate,
+        book,
+        updateBookRealTime,
+        setGenericModalParams
+    }
+    const amountOfThisBookInCart=useMemo(()=>{
+        if (role===ROLE_TYPES.admin||book.deleted)
+            return 0
+        const result=cartItems.reduce((accumulator,bookItem)=>(
+            bookItem._id===book._id?(accumulator+1):accumulator
+        ),0)
+        return result
+    },[cartItems])
+    const actualBookPrice=useMemo(()=>{
+        return getActualBookPrice(book,role).toLocaleString("en-US",{maximumFractionDigits:2})
+    },[role])
     return (
         <div className="book" >
             <label className="label">
@@ -27,7 +49,7 @@ function Book({book}){
             <div className="book-buttons-container">
                 {role!==ROLE_TYPES.admin&&
                     <>
-                        {(cartItems.some(bookItem=>bookItem._id===book._id)&&!book.deleted)&&
+                        {(!book.deleted&&cartItems.some(bookItem=>bookItem._id===book._id))&&
                             <button onClick={()=>{
                                 const cartItemsCopy=[...cartItems]
                                 const bookIndex=cartItems.findIndex((bookItem)=>(bookItem._id===book._id))
@@ -50,81 +72,51 @@ function Book({book}){
                     <>
                         {book.available?
                             <button className="not-icon-btn" onClick={()=>{
-                                handleUpdateBook({
-                                    update:{available:false},
-                                    setRole,
-                                    navigate,
-                                    book
-                                })
+                                handleUpdateBook({...params,update:{available:false}})
                             }}>
-                                הפוך<br/>
-                                 ללא<br/>
+                                הפוך
+                                 ללא
                                 זמין
                             </button>:
-                            <button className="not-icon-btn" onClick={()=>{//הפוך לזמין
-                                handleUpdateBook({
-                                    update:{available:true},
-                                    setRole,
-                                    navigate,
-                                    book  
-                                })
+                            <button onClick={()=>{//הפוך לזמין
+                                handleUpdateBook({...params,update:{available:true}})
                             }}>
-                                <TbTrashOff color="white" size={33}/>
+                                <TbTrashOff color="white" size={25}/>
                             </button>
                         }
-                        <button onClick={async()=>{
-                            const isAdminConfirm=window.confirm("האם אתה באמת רוצה למחוק את הספר "+book.name+"מהמאגר? *זאת פעולה בלתי הפיכה")
-                            if (!isAdminConfirm)
-                                return 
-                            const token=sessionStorage.getItem("token")
-                            try{
-                                if (!token)
-                                    throw new Error()
-                                const {data:deletedBook}=await axios.delete(process.env.REACT_APP_BASIC_URL+"delete-book?_id="+book._id,{
-                                    headers:{
-                                        'Content-Type': 'application/json',
-                                        "Authorization":"Bearer "+token
-                                    }
-                                })
-                                console.log(deletedBook)
-                                navigate("/")
-                            }catch(err){
-                                console.log(err)
-                                if (err?.response?.status===500)
-                                    alert("מצטערים לא הצלחנו להתקשר עם השרת ולכן הספר לא נמחק")
-                                else {
-                                    navigate("/admin",{replace:true})
-                                    alert("התנתקת לנו אתה מוזמן להתחבר שוב")
-                                    setRole(ROLE_TYPES.guest)
+                        <button onClick={()=>{
+                            setGenericModalParams({
+                                content:"האם אתה באמת רוצה למחוק את הספר "+book.name+" מהמאגר? *זאת פעולה בלתי הפיכה",
+                                confirmButtonContent:"מחק ספר",
+                                cancelButtonNeeded:true,
+                                confirmFunc:({closeGenericModal})=>{
+                                    handleDeleteBook({...params,closeGenericModal,deleteBookRealTime})
                                 }
-                            }
+                            })
                         }}>
-                            <BsFillTrash3Fill color="white" size={26}/>
+                            <BsFillTrash3Fill color="white" size={25}/>
                         </button>
                         {book.discount>0?
                             <button className="not-icon-btn" onClick={()=>{
-                                handleUpdateBook({
-                                    update:{discount:0},
-                                    setRole,
-                                    navigate,
-                                    book
-                                })
+                                handleUpdateBook({...params,update:{discount:0}})
                             }}>
                                 בטל
                                 הנחה
                                 קיימת
                             </button>:
                             <button className="not-icon-btn" onClick={()=>{
-                               const discountString=prompt("כתוב כאן את ההנחה שאתה רוצה באחוזים")
-                               const discount=discountString*1
-                                if (discount!==""&&discount>=0&&discount<=100){
-                                    handleUpdateBook({
-                                        update:{discount},
-                                        setRole,
-                                        navigate,
-                                        book
-                                    })
-                                }
+                                setGenericModalParams({
+                                    content:
+                                        <form className="create-discount-form">
+                                            כתוב כאן את ההנחה שאתה רוצה באחוזים: 
+                                            <input ref={discountInputRef}/>    
+                                        </form>,
+                                    confirmButtonContent:"צור הנחה",
+                                    cancelButtonNeeded:true,
+                                    confirmFunc:(closeGenericModal)=>{
+                                        createDiscount(discountInputRef,closeGenericModal,params)
+                                    }
+                                })
                             }}>
                                 צור
                                 הנחה 
@@ -133,17 +125,16 @@ function Book({book}){
                         <button className="not-icon-btn" onClick={()=>{
                             navigate("/edit-book/"+book._id)
                         }}>
-                            ערוך<br/>
+                            ערוך
                             ספר
                         </button>
                     </>
                 }
             </div>
-            <div  onDoubleClick={()=>{
-                    if (!book.deleted)
-                       navigate("/book/"+book._id)
-                    console.log("HGHGGH")
-                }}>
+            <div  onClick={()=>{
+                if (!book.deleted)
+                    navigate("/book/"+book._id)
+            }}>
                 <img src={book.bookCover} alt="book cover"/>
                 {!book.available&&<img src={unavailableSign} alt="unavailable" className="unavailable-img" />}
             </div>
@@ -152,10 +143,18 @@ function Book({book}){
                     <>
                         {"מחיר אמיתי: "+book.price}
                             <br/>
-                        {"מחיר לאחר הנחה: "+getActualBookPrice(book,role)}
+                        {"מחיר לאחר הנחה: "+actualBookPrice}
                     </>:
                     <>
-                        {"מחיר: "+getActualBookPrice(book,role)}
+                        {!book.deleted&&amountOfThisBookInCart>0&&
+                            <>
+                                {"כמות ספרים בעגלה: "+amountOfThisBookInCart}
+                                <br/>
+                                {"מחיר  כולל: "+amountOfThisBookInCart*actualBookPrice}
+                                <br/>
+                            </>
+                        }
+                        {"מחיר ליחידה: "+actualBookPrice}
                     </>
                 }
             </label>

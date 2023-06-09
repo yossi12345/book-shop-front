@@ -4,7 +4,9 @@ import {TbPigMoney} from "react-icons/tb"
 import Cart from "../../Cart"
 import { useContext } from "react"
 import { CartItems } from "../../CartItemsContext/CartItemsContext"
+import { SetGenericModalParams } from "../../modal-componenets/GeneiclModal/GenericModal"
 function CartButton(props){
+    const setGenericModalParams=useContext(SetGenericModalParams)
     const cartItems=useContext(CartItems)
     function cantUserBuyBook(book){
         return book.deleted||!book.available
@@ -21,18 +23,18 @@ function CartButton(props){
             </span>
             <button onClick={()=>{
                 if (cartItems.length===0){
-                    alert("העגלה שלך ריקה")
+                    setGenericModalParams({content:"העגלה שלך ריקה"})
                     return
                 }
                 if (!cartItems.every(cantUserBuyBook)){
                     props.setShouldPayModalOpen(true)
                     return 
                 }
-                alert("כל הספרים בעגלה שלך לא זמינים או שנמחקו לגמרי")
+                setGenericModalParams({content:"כל הספרים בעגלה שלך לא זמינים או שנמחקו לגמרי"})
                 const mozart=new Audio("/mozart_34.m4a")
                 mozart.play()
             }}>
-                <TbPigMoney size={60}/>
+                <TbPigMoney size="100%"/>
             </button>
         </NavLink>
     )

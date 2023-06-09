@@ -1,0 +1,61 @@
+.edit-account-form{
+    background-color: aqua;
+    margin:125px auto 10px;
+    width: calc(100vw - 40px);
+    max-width: 872px;
+    padding: 20px;
+    label{
+        display: inline-block;
+        padding:5px 0;
+        font-size: 13px; 
+        width: 130px; 
+        @media (min-width:410px) {
+            width: 170px;
+            font-size: 16px;
+        }
+    }
+    ul{
+        padding: 0;
+        list-style: none;
+    }
+    input{
+        width: 130px;
+        @media (min-width:410px) {
+            width:160px; 
+        }
+        &::placeholder{
+            font-size: 9px;
+        }
+    }
+    // .change-label{
+    //     @media (min-width:410px) {
+    //         padding-right:21px; 
+    //     }
+    // }
+}
+.delete-user-button{
+    background-color: red;
+    font-weight: bold;
+    margin-top: 50px;
+    
+}
+.field-change-container{
+    height:fit-content;
+}
+.delete-user-form{
+    display: flex;
+    flex-direction: column;
+    h2{
+        text-align: center;
+        color: red;
+        margin-top: 0;
+        @media (max-width:360px) {
+            width: 250px;
+            margin: auto;  
+            margin-top: 0; 
+        }
+    }
+    label{
+        margin-left:3px;
+    }
+}

@@ -1,8 +1,7 @@
 import axios from "axios";
-import { ROLE_TYPES } from "../../global-constants";
+import { ADMIN_PASSWORD_REGEX, ROLE_TYPES } from "../../global-constants";
 export async function handleLogin({inputsRefs,setUsername,navigate,setRole,setLoginFailMessage}){
     const wrongDetailsMessage="שם המשתמש או הסיסמה שגויים"
-    const passwordTest=/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*]).{8,}$/
     const username=inputsRefs.current[0].value.trim()
     const password=inputsRefs.current[1].value
     if (username===""){
@@ -15,7 +14,7 @@ export async function handleLogin({inputsRefs,setUsername,navigate,setRole,setLo
     }
     if (password===""||username==="")
         return
-    if (!passwordTest.test(password)){
+    if (!ADMIN_PASSWORD_REGEX.test(password)){
         setLoginFailMessage(wrongDetailsMessage)
         return
     }

@@ -1,8 +1,9 @@
 @use "src/variables-and-mixins/screen-width.scss" as *;
 .not-found-element{
-    margin:200px auto 0;
-    width: 90vw;
-    height: 90vh;
+    margin:120px auto 0;
+    max-width:700px;
+    height: 420px;
+    width: calc(80vw - 50px);
     position: relative;
     img{
         width: 100%;
@@ -17,5 +18,8 @@
     top: 0;
     h1{
         margin: 0;
+        @media (max-width:790px) {
+            font-size: 35px;
+        }
     }
 }

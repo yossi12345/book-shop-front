@@ -20,12 +20,33 @@
 .english{
     direction: ltr;
 }
+input{
+    &::placeholder{
+        color: red;
+    }
+}
 .submit-button{
     margin:5px auto 5px;
     background-color: greenyellow;
     border: 2px solid rgb(216, 113, 113);
     font-size: 15px;
+    cursor: pointer;
+}
+.create-discount-form{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100px;
+}
+.home-link{
+    display: block;
+    margin: auto;
 }
 .none{
     display: none;
+}
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

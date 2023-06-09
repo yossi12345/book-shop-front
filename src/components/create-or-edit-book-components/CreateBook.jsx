@@ -10,10 +10,12 @@ import { handleAuth } from "./CreateOrEditBook-functions"
 import CreateOrEditBookForm from "./CreateOrEditBookForm"
 import { useNavigate } from "react-router-dom"
 import LoadingPage from "../LoadingPage/LoadingPage"
+import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
 function CreateBook({setUsername}){
     const navigate=useNavigate()
     const role=useContext(Role)
     const setRole=useContext(SetRole)
+    const setGenericModalParams=useContext(SetGenericModalParams)
     const [isAuthSucceded,setIsAuthSucceded]=useState(false)
     useEffect(()=>{
         handleAuth({
@@ -21,7 +23,8 @@ function CreateBook({setUsername}){
             role,
             setRole,
             setIsAuthSucceded,
-            setUsername
+            setUsername,
+            setGenericModalParams
         })
     },[role])
     if (!isAuthSucceded)

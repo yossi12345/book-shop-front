@@ -1,24 +1,30 @@
 @use "src/variables-and-mixins/screen-width.scss" as *;
 .big-cart{
-    margin: 208px 50px 0 0;
+    margin: 110px auto 0;
     text-align: start;
     background-color: transparent;
     border: none;
-    @media (min-width:$w1100) {
-        display: block;
-        margin: 208px auto 0;
-    }
+    display: block;
+    cursor: pointer;
     div{
         display: flex;
         align-items: center;
         gap:20px;
-        font-size: 70px;
+        font-size: 25px;
         font-weight: 600;
     }
     img{
-        width:100px;
-        height: 100px;
+        width:40px;
+        height: 30px;
     }
+}
+.big-cart-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    flex-direction: column;
+   
 }
 .buy-books-books-container{
     display: flex;

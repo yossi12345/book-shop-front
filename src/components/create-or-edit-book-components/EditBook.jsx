@@ -5,6 +5,7 @@ import { Role, SetRole } from "../RoleContext1"
 import { handleAuth } from "./CreateOrEditBook-functions"
 import axios from "axios"
 import LoadingPage from "../LoadingPage/LoadingPage"
+import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
 function EditBook({setUsername}){
     const navigate=useNavigate()
     const {bookId}=useParams()
@@ -12,6 +13,7 @@ function EditBook({setUsername}){
     const [isEdit,setIsEdit]=useState(false)
     const role=useContext(Role)
     const setRole=useContext(SetRole)
+    const setGenericModalParams=useContext(SetGenericModalParams)
     const [isAuthSucceded,setIsAuthSucceded]=useState(false)
     useEffect(()=>{
       handleSetBook()
@@ -22,7 +24,8 @@ function EditBook({setUsername}){
             role,
             setRole,
             setIsAuthSucceded,
-            setUsername
+            setUsername,
+            setGenericModalParams
         })
     },[role])
     async function handleSetBook(){
@@ -37,7 +40,7 @@ function EditBook({setUsername}){
         }catch(err){
             console.log("klui",err)
             if (err?.response?.status===500){
-                alert("לא הצלחנו להתקשר עם השרת ולכן לא נוכל לעדכן את הספר")
+                setGenericModalParams({content:"לא הצלחנו להתקשר עם השרת ולכן לא נוכל לעדכן את הספר"})
                 navigate("/")
             }
             else

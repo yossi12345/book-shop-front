@@ -1,22 +1,50 @@
+import { useState } from "react"
 import CloseModalBtn from "../CloseModalBtn/CloseModalBtn"
 import ModalContainer from "../ModalContainer/ModalContainer"
-import ModalInput from "../ModalInput/ModalInput"
 import "./DeleteUserModal.scss"
+import { useContext } from "react"
+import { Role, SetRole } from "../../RoleContext1"
+import { useNavigate } from "react-router-dom"
+import { handleDeleteUser } from "./DeleteUserModal-functions"
 function DeleteUserModal(props){
+    const navigate=useNavigate()
+    const [input,setInput]=useState({
+        value:"",
+        placeholder:""
+    })
+    const role=useContext(Role)
+    const setRole=useContext(SetRole)
+    function closeModal(){
+        props.setShouldDeleteUserModalOpen(false)
+    }
     return (
         <ModalContainer>
             <div className="delete-user-modal">
-                <CloseModalBtn closeModal={()=>{
-                    props.setShouldDeleteUserModalOpen(false)
-                }}/>
+                <CloseModalBtn closeModal={closeModal}/>
                 <h1>היזהר! פעולה זאת היא בלתי הפיכה </h1>  
                 <form>
-                    <ModalInput label="האימייל של היוזר למחיקה"/>
-                    <ModalInput label="הסיסמה שלך" isPassword={true}/>
+                    <div>
+                        <label>
+                            הסיסמה שלך:
+                        </label>
+                        <input type="password" value={input.value} placeholder={input.placeholder} onChange={event=>{
+                            const inputCopy={...input}
+                            inputCopy.value=event.target.value
+                            setInput(inputCopy)
+                        }}/>
+                    </div>
                     <button className="submit-button" 
-                        onClick={async(event)=>{
+                        onClick={(event)=>{
                             event.preventDefault()
-                            
+                            handleDeleteUser({
+                                input,
+                                setInput,
+                                closeModal,
+                                navigate,
+                                role,
+                                setRole,
+                                setLoginModalShouldOpen:props.setLoginModalShouldOpen
+                            })
                         }}
                     >
                             מחק משתמש

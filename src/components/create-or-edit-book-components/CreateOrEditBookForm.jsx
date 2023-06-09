@@ -4,33 +4,29 @@ import "./CreateOrEditBookForm.scss"
 import { useNavigate } from "react-router-dom"
 import { Role, SetRole } from "../RoleContext1"
 import { handleCreateOrEditBook } from "./CreateOrEditBook-functions"
+import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
 function CreateOrEditBookForm({book,isEdit}){
     const navigate=useNavigate()
     const setRole=useContext(SetRole)
     const role=useContext(Role)
-    const [selectValue,setSelectValue]=useState("רומן אירוטי")
+    const setGenericModalParams=useContext(SetGenericModalParams)
+    const [selectValue,setSelectValue]=useState(isEdit?book.genre:"רומן אירוטי")
     const [inputsObj,setInputsObj]=useState({
         name:{
             label:"שם הספר:",
-            value:isEdit?book.name:"",
+            value:isEdit?book.name+"":"",
             placeholder:"",
             key:Math.random()
         },
         author:{
             label:"שם הסופר:",
-            value:isEdit?book.author:"",
-            placeholder:"",
-            key:Math.random()
-        },
-        bookCover:{
-            label:"מקור לכריכה:",
-            value:isEdit?book.bookCover:"",
+            value:isEdit?book.author+"":"",
             placeholder:"",
             key:Math.random()
         },
         price:{
             label:"מחיר:",
-            value:isEdit?book.price:"",
+            value:isEdit?book.price+"":"",
             placeholder:"",
             key:Math.random()
         },
@@ -40,7 +36,7 @@ function CreateOrEditBookForm({book,isEdit}){
                     הנחה באחוזים<br/>
                     (אם יש)
                 </>,
-            value:(isEdit&&book.discount)?book.discount:"",
+            value:(isEdit&&book.discount)?book.discount+"":"",
             placeholder:"",
             key:Math.random()
         }
@@ -48,7 +44,7 @@ function CreateOrEditBookForm({book,isEdit}){
     const [textareasObj,setTextareasObj]=useState({
         description:{
             label:"תיאור:",
-            value:isEdit?book.description:"",
+            value:isEdit?book.description+"":"",
             placeholder:"",
             key:Math.random(),
             isAllScreen:false
@@ -59,12 +55,13 @@ function CreateOrEditBookForm({book,isEdit}){
                     פרק ראשון<br/>
                     (אם יש)
                 </>,
-            value:(isEdit&&book.firstChapter)?book.firstChapter:"",
+            value:(isEdit&&book.firstChapter)?book.firstChapter+"":"",
             placeholder:"",
             key:Math.random(),
             isAllScreen:false
         }
     })
+    const [bookCover,setBookCover]=useState(null)
     return (
         <form className="create-book-form" onSubmit={(event)=>{
             event.preventDefault()
@@ -72,13 +69,16 @@ function CreateOrEditBookForm({book,isEdit}){
                 navigate,
                 setInputsObj,
                 setTextareasObj,
+                setBookCover,
                 inputsObj,
                 selectValue,
                 textareasObj,
+                bookCover,
                 role,
                 isEdit,
                 setRole,
-                bookId:book?._id
+                setGenericModalParams,
+                bookId:book?._id,
             })
         }}>
             <table>
@@ -91,7 +91,7 @@ function CreateOrEditBookForm({book,isEdit}){
                                 </label>
                             </td>
                             <td>
-                                <input value={inputsObj[field].value} 
+                                <input value={inputsObj[field].value}
                                     placeholder={inputsObj[field].placeholder} 
                                     onChange={(event)=>{
                                         const newInputsObj={...inputsObj}
@@ -102,6 +102,63 @@ function CreateOrEditBookForm({book,isEdit}){
                             </td>
                         </tr>
                     ))}
+                    <tr className="book-cover-row">
+                        <td>
+                            {isEdit&&bookCover&&
+                                <button onClick={()=>{
+                                    setBookCover(null)
+                                }}>
+                                    חזור לכריכה המקורית
+                                </button>
+                            }
+                        </td>
+                        <td>
+                            <div className="input-container">
+                                {bookCover&&
+                                    <>{
+                                        "נבחר: "+
+                                        (bookCover.name.length<20?
+                                            bookCover.name:
+                                            (bookCover.name.slice(0,18)+"...")
+                                        )
+                                    }</>
+                                }
+                                {!bookCover&&isEdit&&
+                                    <div>
+                                        לבחירת כריכת ספר <b>חדשה</b> לחץ כאן
+                                    </div>
+                                }
+                                {!bookCover&&!isEdit&&
+                                    <>
+                                        לבחירת כריכת ספר לחץ כאן
+                                    </>
+                                }
+
+                                <input type="file" accept=".jpeg,.jpg,.png" value="" onChange={(event)=>{
+                                    const file=event.target.files[0]
+                                    const extname=file.name.slice(file.name.lastIndexOf(".")).toLowerCase()
+                                    console.log("JH",file)
+                                    if (extname!==".jpeg"&&extname!==".jpg"&&extname!==".png")
+                                        setGenericModalParams({content:"יש לבחור רק תמונות מסוג jpeg jpg png"})
+                                    else if (file.size>1024*1024*100)
+                                        setGenericModalParams({content:"התמונה שבחרת גדולה מדי"})
+                                    else
+                                        setBookCover(file)
+                                    
+                                }}/>
+                            </div>
+                            {bookCover&&
+                                <div className="book-cover-image-container">
+                                    <img alt="book cover" src={URL.createObjectURL(bookCover)} />
+                                </div>
+                            }
+                            {!bookCover&&isEdit&&
+                                <div className="book-cover-image-container">
+                                    <img alt="book cover" src={book?.bookCover}/>
+                                </div>
+                            }
+                        </td>
+                    </tr>
                     <tr>
                         <td>
                             <label>
@@ -124,7 +181,7 @@ function CreateOrEditBookForm({book,isEdit}){
                                 </label>
                             </td>
                             <td>
-                                <textarea value={textareasObj[field].value} 
+                                <textarea value={textareasObj[field].value}
                                     className={textareasObj[field].isAllScreen?"all-screen":""} 
                                     placeholder={textareasObj[field].placeholder}
                                     onChange={(event)=>{
@@ -152,4 +209,3 @@ function CreateOrEditBookForm({book,isEdit}){
     )
 }
 export default CreateOrEditBookForm
-//ספר שמדבר על אהבת הנעורים של זאב ביבי נתניהו ומירב מיכאלי. מירב מיכאלי קשורה במרתף כגימפ ושם מנצלים את שירותיה. זהו הסיפור האפל של רז וזאב ואני לא אחראי לשום דבר שנכתב בו 

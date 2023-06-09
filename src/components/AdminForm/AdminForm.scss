@@ -1,5 +1,5 @@
 .admin-form-container{
-    margin: 200px auto 0;
+    margin: 120px auto 0;
     background-color: purple;
     height: 400px;
     width: 95vw;
@@ -18,11 +18,6 @@
         div{
             display: flex;
             gap:4px;
-        }
-    }
-    input{
-        &::placeholder{
-            color: red;
         }
     }
     .login-fail-message-container{

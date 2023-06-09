@@ -1,7 +1,7 @@
 @use "src/variables-and-mixins/screen-width.scss" as *;
 .search-books-container{
     display: flex;
-    height: 68px;
+    height: 52px;
     width: 100%;
     justify-content: space-between;
     align-items: center;
@@ -12,8 +12,7 @@
         height: 100%;
         border-radius: 15px;
         border: 3px solid rgb(16, 188, 188);
-        font-size: 30px;
-        padding: 0 20px;
+        font-size: 20px;
         &:focus{
             outline: none;
         }
@@ -22,7 +21,8 @@
         height: 48px;
         width:50.42px;
         border-radius: 20px;
-        border: 1px solid rgb(16, 188, 188);
+       // border: 1px solid rgb(16, 188, 188);
+        border: none;
         background-color: transparent;
     }
 }

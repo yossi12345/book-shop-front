@@ -1,19 +1,18 @@
 .nav-and-books-and-pages-container{
-    margin: auto;
-    margin: 230px auto 0;
+    margin: 115px auto 0;
     width: 90vw;
     display: flex;
     flex-direction: column;
     gap: 40px;
+    align-items: center;
 }
 .books-nav{
     width:fit-content;
     height: fit-content;
-    margin:0 auto 0px;
-    border: 2px solid gray;
-    padding: 10px;
+    border: 2px solid rgba(128, 128, 128, 0.329);
+    border-radius: 10px;
+    padding: 8px;
     display: flex;
-    align-items: center;
     flex-direction: column;
     flex-wrap: wrap;
     font-size: 20px;
@@ -21,9 +20,10 @@
     .select-container{
         display: flex;
         align-items: center;
-        gap:10px;
+        align-self: start;
         div{
-            width: 80px;
+            width: 55px;
+            font-size: 13px;
         }
     }
     select{
@@ -32,20 +32,36 @@
         padding: 7px;
         border-radius: 20px;
         font-weight: bold;
-        margin-top: 15px;
+        margin-top: 3px;
         option{
             font-size: 20px; 
         }
     }
 }
 .books-container{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    display: grid;
     gap:15px;
+    width: fit-content;
+    @media (min-width:395px) {
+        grid-template-columns: repeat(2, 1fr);    
+    }
+    @media (min-width:520px) {
+        grid-template-columns: repeat(3, 1fr);    
+    }
+    @media (min-width:1085px) {
+        grid-template-columns: repeat(6, 1fr);    
+    }
 }
 .pages{
-    text-align: center;
     direction: ltr;
     margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:7px;
+}
+.current-page{
+    font-size: 28px;
+    font-weight: 700;
+    color: rgb(199, 78, 8);
 }

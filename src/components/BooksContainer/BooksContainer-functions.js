@@ -1,6 +1,5 @@
 import axios from "axios"
 import { SORT_OPTIONS } from "../../global-constants"
-
 export function changeSortFieldsInState({state,setState,selectedValue}){
     const newState={...state}
     function changeNewState(sort,asending){
@@ -32,7 +31,7 @@ export function changeSortFieldsInState({state,setState,selectedValue}){
 
 export async function handleShowBooks(params){
     const url=getUrl(params.state,params.isAdmin)
-    console.log("fgfg",url,params.state)
+    //console.log("fgfg",url,params.state)
     const headers={
         'Content-Type': 'application/json',
     } 
@@ -40,9 +39,9 @@ export async function handleShowBooks(params){
         headers['Authorization']="Bearer "+sessionStorage.getItem("token")
     try{
         const {data}=await axios.get(url,{headers})
-        console.log("lklklklk",data)
-        if (!params.isPossibleBooks){
-            params.setIsThereMoreBooks(data.isThereMoreBooks)
+        //console.log("lklklklk",data)
+        if (!params.isBooksForAutoCompletion){
+            params.setAmountOfBooks(data.amountOfBooks)
             params.setBooksToShow(data.books)
         }
         else{
@@ -55,9 +54,9 @@ export async function handleShowBooks(params){
     }catch(err){
         params.setBooksToShow([])
         console.log(err)
-        if (params.isPossibleBooks)
+        if (params.isBooksForAutoCompletion)
             return
-        params.setIsThereMoreBooks(false)
+        params.setAmountOfBooks(0)
         if (err?.response?.status===500)
             params.setFailFindBooksMessage("אנחנו מצטערים אין לנו קשר עם השרת כרגע ולכן אין לנו ספרים להציע")
         else if (err?.response?.status===404)

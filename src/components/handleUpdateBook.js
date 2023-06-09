@@ -1,6 +1,6 @@
 import axios from "axios"
 import { ROLE_TYPES } from "../global-constants"
-export async function handleUpdateBook({book,update,setRole,navigate}){
+export async function handleUpdateBook({book,update,setRole,navigate,updateBookRealTime,setGenericModalParams}){
 
     const token=sessionStorage.getItem("token")
     try{
@@ -14,15 +14,16 @@ export async function handleUpdateBook({book,update,setRole,navigate}){
             }
         })
         console.log(updatedBook)
-        window.location.reload()
+        updateBookRealTime(update)
     }catch(err){
         console.log(err)
         if (err?.response?.status===500)
-            alert("מצטערים לא הצלחנו להתקשר עם השרת ולכן הספר נשאר זמין")
+            setGenericModalParams({content:"מצטערים לא הצלחנו להתקשר עם השרת ולכן העדכון נכשל"})
         else if (err?.response?.status===400) {
             navigate("/admin",{replace:true})
-            alert("התנתקת לנו אתה מוזמן להתחבר שוב")
+            setGenericModalParams({content:"התנתקת לנו אתה מוזמן להתחבר שוב"})
             setRole(ROLE_TYPES.guest)
+            sessionStorage.removeItem("token")
         }
     }
     

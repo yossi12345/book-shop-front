@@ -1,27 +1,30 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import jwtDecode from 'jwt-decode';
 import { ROLE_TYPES,GUEST_NAME } from "../global-constants";
+import { SetGenericModalParams } from "./modal-componenets/GeneiclModal/GenericModal";
 export const Role=createContext()
 export const SetRole=createContext()
 function RoleContext1({children,setLoginModalShouldOpen,setUsername}){
-   const [role1,setRole1]=useState(ROLE_TYPES.guest)
+    const [role1,setRole1]=useState(ROLE_TYPES.guest)
+    const setGenericModalParams=useContext(SetGenericModalParams)
     useEffect(()=>{
         handleSetRole()
         const checkTokenValidityInterval=setInterval(handleSetRole,1800000)
         return ()=>{
             clearInterval(checkTokenValidityInterval)
         }
-   },[])
-   useEffect(()=>{
+    },[])
+    console.log(role1)
+    useEffect(()=>{
         if (role1===ROLE_TYPES.guest)
             setUsername(GUEST_NAME)
-   },[role1])
-   async function handleSetRole(){
+        
+    },[role1])
+    async function handleSetRole(){
        const token=sessionStorage.getItem("token")
         if (!token){
             setRole1(ROLE_TYPES.guest)
-            //setUsername(GUEST_NAME)
             return
         } 
         const {role: newRole}=jwtDecode(token)
@@ -43,17 +46,16 @@ function RoleContext1({children,setLoginModalShouldOpen,setUsername}){
             console.log(err)
             sessionStorage.removeItem("token")
             setLoginModalShouldOpen(true)
-            alert("התנקת לנו אתה מוזמן להתחבר שוב")
-            //setUsername(GUEST_NAME)
+            setGenericModalParams({content:"התנקת לנו אתה מוזמן להתחבר שוב"})
             setRole1(ROLE_TYPES.guest)
         }
-   } 
-   return (
+    } 
+    return (
         <Role.Provider value={role1}>
             <SetRole.Provider value={setRole1}>
                 {children}
             </SetRole.Provider>
         </Role.Provider>
-   )
+    )
 }
 export default RoleContext1
