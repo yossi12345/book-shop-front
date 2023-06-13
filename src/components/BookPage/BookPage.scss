@@ -1,8 +1,10 @@
+@use "src/variables-and-mixins/screen-width.scss" as *;
 .book-page-container{
-    padding: 130px 40px 50px;
-    min-width: 500px;
-    .book-container{
-        display: flex;
+    padding: 130px 40px 30px;
+    display: flex;
+    font-size: 12px;
+    @media (min-width:$w510){
+        font-size: 16px;     
     }
 }
 .discount-message{
@@ -27,34 +29,9 @@
         display: flex;
         align-items: center;
         gap:3px;
-    }
-}
-.first-chapter-modal{
-    background-color: white;
-    width:calc(100vw - 50px);
-    height:calc(100vh - 50px);
-    .first-chapter{
-        overflow: auto;
-        color: black;
-        height: calc(100% - 80px);
-        font-size: 20px;
-        padding: 10px 30px;
-    }
-    .upper-part{
-        background-color: black;
-        height: 80px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding:10px 20px;
-        button{
-            padding: 0;
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
-        }
-        img{
-            height: 100%;
+        font-size: 10px;
+        @media (min-width:$w510) {  
+            font-size: 13.33px;
         }
     }
 }

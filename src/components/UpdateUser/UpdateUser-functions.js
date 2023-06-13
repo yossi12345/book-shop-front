@@ -47,7 +47,7 @@ export async function handleDeleteUser(params){
             params.navigate("/admin",{replace:true})
         else{
             params.navigate("/",{replace:true})
-            params.setLoginModalShouldOpen(true)
+            params.openLoginModal(true)
         }
         sessionStorage.removeItem("token")
         params.closeGenericModal()
@@ -55,69 +55,69 @@ export async function handleDeleteUser(params){
         params.setGenericModalParams({content:"התנתקת לנו אתה מוזמן להתחבר שוב"})
     }
 }
-export async function handleUpdatePassword(params){
-    const newPassword=params.inputsState.password.value
-    const passwordAgain=params.inputsState.passwordAgain.value
-    let isAllInputValid=true
-    const currentPassword=params.inputsState.currentPassword.value
-    if (newPassword===""||passwordAgain===""){
-        isAllInputValid=false
-        if (newPassword==="")
-            changeInputTextOrPassword(params,"password","","יש להכניס סיסמה חדשה")
-        if (passwordAgain==="")
-            changeInputTextOrPassword(params,"passwordAgain","","יש להכניס סיסמה חדשה שוב")
-    }
-    else if (newPassword!==passwordAgain){
-        isAllInputValid=false
-        const placeholder="יש להכניס סיסמאות תואמות"
-        changeInputTextOrPassword(params,"password","",placeholder)
-        changeInputTextOrPassword(params,"passwordAgain","",placeholder)
-    }
-    else if (params.role===ROLE_TYPES.admin&&!ADMIN_PASSWORD_REGEX.test(newPassword)){
-        isAllInputValid=false
-        const placeholder="על הסיסמה לכלול אות קטנה,אות גדולה וסימן מיוחד"
-        changeInputTextOrPassword(params,"password","",placeholder)
-        changeInputTextOrPassword(params,"passwordAgain","",placeholder)
-    }
-    else if (newPassword.length<8||newPassword.length>20||passwordAgain.length>20||passwordAgain.length<8){
-        isAllInputValid=false
-        const placeholder="על הסיסמה להיות בין 8 ל20 תווים"
-        changeInputTextOrPassword(params,"password","",placeholder)
-        changeInputTextOrPassword(params,"passwordAgain","",placeholder)
-    }
-    if (
-        (params.role!==ROLE_TYPES.admin&&(currentPassword.length<8||currentPassword.length>20))||
-        (params.role===ROLE_TYPES.admin&&!ADMIN_PASSWORD_REGEX.test(currentPassword))
-    ){
-        changeInputTextOrPassword(params,"currentPassword","","*סיסמה שגויה")
-        isAllInputValid=false
-    }
-    if (!isAllInputValid)
-        return
-    const token=sessionStorage.getItem("token")
-    try{
-        if (!token)
-            throw new Error()
-        const url=process.env.REACT_APP_BASIC_URL+(params.role===ROLE_TYPES.admin?"update-admin-account":"update-account")
-        const {data:user}=await axios.patch(url,{
-            update:["password",newPassword],
-            password:currentPassword
-        },{
-            headers:{
-                "Content-Type":"application/json",
-                "Authorization":"Bearer "+token
-            }
-        })
-        console.log(user)
+// export async function handleUpdatePassword(params){
+//     const newPassword=params.inputsState.password.value
+//     const passwordAgain=params.inputsState.passwordAgain.value
+//     let isAllInputValid=true
+//     const currentPassword=params.inputsState.currentPassword.value
+//     if (newPassword===""||passwordAgain===""){
+//         isAllInputValid=false
+//         if (newPassword==="")
+//             changeInputTextOrPassword(params,"password","","יש להכניס סיסמה חדשה")
+//         if (passwordAgain==="")
+//             changeInputTextOrPassword(params,"passwordAgain","","יש להכניס סיסמה חדשה שוב")
+//     }
+//     else if (newPassword!==passwordAgain){
+//         isAllInputValid=false
+//         const placeholder="יש להכניס סיסמאות תואמות"
+//         changeInputTextOrPassword(params,"password","",placeholder)
+//         changeInputTextOrPassword(params,"passwordAgain","",placeholder)
+//     }
+//     else if (params.role===ROLE_TYPES.admin&&!ADMIN_PASSWORD_REGEX.test(newPassword)){
+//         isAllInputValid=false
+//         const placeholder="על הסיסמה לכלול אות קטנה,אות גדולה וסימן מיוחד"
+//         changeInputTextOrPassword(params,"password","",placeholder)
+//         changeInputTextOrPassword(params,"passwordAgain","",placeholder)
+//     }
+//     else if (newPassword.length<8||newPassword.length>20||passwordAgain.length>20||passwordAgain.length<8){
+//         isAllInputValid=false
+//         const placeholder="על הסיסמה להיות בין 8 ל20 תווים"
+//         changeInputTextOrPassword(params,"password","",placeholder)
+//         changeInputTextOrPassword(params,"passwordAgain","",placeholder)
+//     }
+//     if (
+//         (params.role!==ROLE_TYPES.admin&&(currentPassword.length<8||currentPassword.length>20))||
+//         (params.role===ROLE_TYPES.admin&&!ADMIN_PASSWORD_REGEX.test(currentPassword))
+//     ){
+//         changeInputTextOrPassword(params,"currentPassword","","*סיסמה שגויה")
+//         isAllInputValid=false
+//     }
+//     if (!isAllInputValid)
+//         return
+//     const token=sessionStorage.getItem("token")
+//     try{
+//         if (!token)
+//             throw new Error()
+//         const url=process.env.REACT_APP_BASIC_URL+(params.role===ROLE_TYPES.admin?"update-admin-account":"update-account")
+//         const {data:user}=await axios.patch(url,{
+//             update:["password",newPassword],
+//             password:currentPassword
+//         },{
+//             headers:{
+//                 "Content-Type":"application/json",
+//                 "Authorization":"Bearer "+token
+//             }
+//         })
+//         console.log(user)
     
-        changeInputTextOrPassword(params,"password")
-        changeInputTextOrPassword(params,"passwordAgain")
-        alert("הסיסמה שלך עודכנה בהצלחה ")
-    } catch(err){
-        handleErrors(params,err,()=>{})
-    }
-}
-export async function handleUpdateUsername(params){
+//         changeInputTextOrPassword(params,"password")
+//         changeInputTextOrPassword(params,"passwordAgain")
+//         alert("הסיסמה שלך עודכנה בהצלחה ")
+//     } catch(err){
+//         handleErrors(params,err,()=>{})
+//     }
+// }
+export async function handleUpdateUser(params){
     const isAdmin=params.role===ROLE_TYPES.admin
     const newInputsState={...params.inputsState}
     const email=params.inputsState.email.value.trim()
@@ -131,7 +131,9 @@ export async function handleUpdateUsername(params){
         handleInvalidInput("email","*המייל שהכנסת לא תקין")
     else if (email!=="")
         updates.email=email
-    if (username!=="")
+    if (username.length>12)
+        handleInvalidInput("username","שם משתמש יכול להכיל עד 12 תווים")
+    else if (username!=="")
         updates.username=username
     if (password!==""||passwordAgain!==""){
         if (password!==passwordAgain)
@@ -209,12 +211,12 @@ export async function handleUpdateUsername(params){
         isAllUpdatesValid=false
     }
 }
-export function changeInputTextOrPassword(params,fieldNameInState,newValue="",newPlaceholder=""){
-    const newInputsState={...params.inputsState}
-    newInputsState[fieldNameInState].value=newValue
-    newInputsState[fieldNameInState].placeholder=newPlaceholder
-    params.setInputsState(newInputsState)
-}
+// export function changeInputTextOrPassword(params,fieldNameInState,newValue="",newPlaceholder=""){
+//     const newInputsState={...params.inputsState}
+//     newInputsState[fieldNameInState].value=newValue
+//     newInputsState[fieldNameInState].placeholder=newPlaceholder
+//     params.setInputsState(newInputsState)
+// }
 // export async function handleUpdateUsername(params,setUsername){
 //     const newUsername=params.inputsState.username.value.trim()
 //     let isAllInputValid=true
@@ -284,75 +286,75 @@ export async function handleAuth(params,setIsAuthSucceeded){
             params.navigate("/admin",{replace:true})
         else{
             params.navigate("/",{replace:true})
-            params.setLoginModalShouldOpen(true)
+            params.openLoginModal(true)
         }
         params.setRole(ROLE_TYPES.guest)
         console.log("lkjujh")
 
     }
 }
-export async function handleUpdateEmail(params){
-    const newEmail=params.inputsState.email.value.trim()
-    let isAllInputValid=true
-    const currentPassword=params.inputsState.currentPassword.value
-    if (newEmail===""){
-        changeInputTextOrPassword(params,"email","","יש להכניס שם אימייל חדש")
-        isAllInputValid=false
-    }
-    else if (!validator.isEmail(newEmail)){
-        changeInputTextOrPassword(params,"email","","המייל שהכנסת לא תקין")
-        isAllInputValid=false
-    }
-    if (currentPassword.length<8||currentPassword.length>20){
-        changeInputTextOrPassword(params,"currentPassword","","*סיסמה שגויה")
-        isAllInputValid=false
-    }
-    if (!isAllInputValid)
-        return
-    const token=sessionStorage.getItem("token")
-    try{
-        if (!token)
-            throw new Error()
-        const {data:user}=await axios.patch(process.env.REACT_APP_BASIC_URL+"update-account",{
-            update:["email",newEmail],
-            password:currentPassword
-        },{
-            headers:{
-                "Content-Type":"application/json",
-                "Authorization":"Bearer "+token
-            }
-        })
-        console.log(user)
-        changeInputTextOrPassword(params,"email")
-        alert("האימייל שלך עודכן בהצלחה ל-"+user.email)
-    } catch(err){
-        handleErrors(params,err,()=>{
-            changeInputTextOrPassword(params,"email","","*האימייל הזה כבר קיים במאגר")
-        })
-    }
-}
-function handleErrors(params,err,funcForErr401){
-    console.log(err)
-    if (err?.response?.status===404){
-        changeInputTextOrPassword(params,"currentPassword","","*הסיסמא שגויה")
-        return
-    }
-    if (err?.response?.status===500){
-        alert("אנחנו מצטערים לא הצלחנו להתחבר לשרת")
-        return 
-    }
-    if (err?.response?.status===401){
-        funcForErr401()
-        return
-    }
-    if (err?.response?.status===400){
-        if (params.role===ROLE_TYPES.admin)
-            params.navigate("/admin",{replace:true})
-        else{
-            params.navigate("/")
-            params.setLoginModalShouldOpen(true)
-        }
-        params.setRole(ROLE_TYPES.guest)
-        alert("התנתקת לנו אתה מוזמן להתחבר שוב")
-    }
-}
+// export async function handleUpdateEmail(params){
+//     const newEmail=params.inputsState.email.value.trim()
+//     let isAllInputValid=true
+//     const currentPassword=params.inputsState.currentPassword.value
+//     if (newEmail===""){
+//         changeInputTextOrPassword(params,"email","","יש להכניס שם אימייל חדש")
+//         isAllInputValid=false
+//     }
+//     else if (!validator.isEmail(newEmail)){
+//         changeInputTextOrPassword(params,"email","","המייל שהכנסת לא תקין")
+//         isAllInputValid=false
+//     }
+//     if (currentPassword.length<8||currentPassword.length>20){
+//         changeInputTextOrPassword(params,"currentPassword","","*סיסמה שגויה")
+//         isAllInputValid=false
+//     }
+//     if (!isAllInputValid)
+//         return
+//     const token=sessionStorage.getItem("token")
+//     try{
+//         if (!token)
+//             throw new Error()
+//         const {data:user}=await axios.patch(process.env.REACT_APP_BASIC_URL+"update-account",{
+//             update:["email",newEmail],
+//             password:currentPassword
+//         },{
+//             headers:{
+//                 "Content-Type":"application/json",
+//                 "Authorization":"Bearer "+token
+//             }
+//         })
+//         console.log(user)
+//         changeInputTextOrPassword(params,"email")
+//         alert("האימייל שלך עודכן בהצלחה ל-"+user.email)
+//     } catch(err){
+//         handleErrors(params,err,()=>{
+//             changeInputTextOrPassword(params,"email","","*האימייל הזה כבר קיים במאגר")
+//         })
+//     }
+// }
+// function handleErrors(params,err,funcForErr401){
+//     console.log(err)
+//     if (err?.response?.status===404){
+//         changeInputTextOrPassword(params,"currentPassword","","*הסיסמא שגויה")
+//         return
+//     }
+//     if (err?.response?.status===500){
+//         alert("אנחנו מצטערים לא הצלחנו להתחבר לשרת")
+//         return 
+//     }
+//     if (err?.response?.status===401){
+//         funcForErr401()
+//         return
+//     }
+//     if (err?.response?.status===400){
+//         if (params.role===ROLE_TYPES.admin)
+//             params.navigate("/admin",{replace:true})
+//         else{
+//             params.navigate("/")
+//             params.openLoginModal(true)
+//         }
+//         params.setRole(ROLE_TYPES.guest)
+//         alert("התנתקת לנו אתה מוזמן להתחבר שוב")
+//     }
+// }

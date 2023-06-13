@@ -37,7 +37,7 @@ export async function handleSetCartItemsFirstValue(setCartItems){
         }catch(err){
             console.log(err)
             if (!err.response){
-                alert("יוסי תדליק ת'שרת תעשה טובה")
+                alert("השרת נפל")
                 return
             }  
             else if (err.response.status===500){

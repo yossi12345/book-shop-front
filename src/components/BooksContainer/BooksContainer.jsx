@@ -73,7 +73,7 @@ function BooksContainer(){
                 </div>
             </div>
             <div className="books-container">
-                {booksToShow.length>0?
+                {booksToShow.length>0&&
                     booksToShow.map((book,i)=>(
                         <Book key={Math.random()} book={book} 
                             deleteBookRealTime={()=>{
@@ -85,13 +85,16 @@ function BooksContainer(){
                                     booksToShowCopy[i][updateKey]=updatesObj[updateKey]
                                 }
                                 setBooksToShow(booksToShowCopy)
-                        }}/>
-                    )):
-                    <div>
-                        {failFindBooksMessage}
-                    </div>
-                }    
+                            }}
+                        />
+                    ))
+                } 
             </div>
+            {booksToShow.length===0&&
+                <div>
+                    {failFindBooksMessage}
+                </div>
+            }
             <div className="pages">
                 {amountOfBooks>6&&
                     <>

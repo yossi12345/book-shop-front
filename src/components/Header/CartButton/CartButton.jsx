@@ -5,6 +5,7 @@ import Cart from "../../Cart"
 import { useContext } from "react"
 import { CartItems } from "../../CartItemsContext/CartItemsContext"
 import { SetGenericModalParams } from "../../modal-componenets/GeneiclModal/GenericModal"
+import {IoTriangleSharp} from "react-icons/io5"
 function CartButton(props){
     const setGenericModalParams=useContext(SetGenericModalParams)
     const cartItems=useContext(CartItems)
@@ -19,7 +20,7 @@ function CartButton(props){
                 const mozart=new Audio("/mozart_34.m4a")
                 mozart.play()   
             }}>
-                <Cart cartSize={30}/>
+                <Cart cartSize={50}/>
             </span>
             <button onClick={()=>{
                 if (cartItems.length===0){
@@ -35,6 +36,14 @@ function CartButton(props){
                 mozart.play()
             }}>
                 <TbPigMoney size="100%"/>
+                <div className="buy-books-label">
+                    <div>
+                        <IoTriangleSharp size={15} color="wheat"/>
+                    </div>
+                    <div>
+                        קנה ספרים
+                    </div>
+                </div>
             </button>
         </NavLink>
     )

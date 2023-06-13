@@ -1,12 +1,12 @@
-import {useState, useRef } from "react"
+import {useState } from "react"
 import "./LoginModal.scss"
-import ModalInput from "../ModalInput/ModalInput"
 import ModalContainer from "../ModalContainer/ModalContainer"
 import { handleLogin, handleSignUp } from "./login-modal-functions"
 import CloseModalBtn from "../CloseModalBtn/CloseModalBtn"
 import { SetRole } from "../../RoleContext1";
 import { useContext } from "react"
-function LoginModal({setLoginModalShouldOpen,setUsername}){
+import { useEffect } from "react"
+function LoginModal({loginModalParams,setLoginModalParams,setUsername}){
 
     const [inputsObj,setInputsObj]=useState({
         login:{
@@ -33,7 +33,7 @@ function LoginModal({setLoginModalShouldOpen,setUsername}){
             },
             username:{
                 key:Math.random(),
-                label:"שם מלא:",
+                label:"שם משתמש:",
                 value:"",
                 placeholder:"",
                 type:"text"
@@ -62,19 +62,26 @@ function LoginModal({setLoginModalShouldOpen,setUsername}){
             }
         }
     })
-    const [failLoginReason,setFailLoginReason]=useState(null)
-    const [failSignUpReason,setFailSignUpReason]=useState(null)
+    const [failReason,setFailReason]=useState("")
     const setRole=useContext(SetRole)
+    useEffect(()=>{
+        setFailReason("")
+    },[loginModalParams])
+    function closeModal(){
+        setLoginModalParams({
+            ...loginModalParams,
+            shouldOpen:false,
+        })
+    }
     return (
         <ModalContainer>
             <div className="login-modal">
-                <CloseModalBtn closeModal={()=>{
-                    setLoginModalShouldOpen(false)
-                }}/>
-                <div className="fail-reason-login-container">
-                    <h2>{failLoginReason}</h2>
+                <CloseModalBtn closeModal={closeModal}/>
+                <div className="fail-reason-container">
+                    <h2>{failReason}</h2>
                 </div>
-                <form className="login-form">
+                <form className={"login-form"+(loginModalParams.isSignIn?" real-height":"")}>
+                    <h3>התחברות</h3>
                     {Object.keys(inputsObj.login).map((field)=>(
                          <div className="modal-input2" key={inputsObj.login[field].key}>
                             <label>
@@ -98,18 +105,23 @@ function LoginModal({setLoginModalShouldOpen,setUsername}){
                                 inputsObj,
                                 setRole,
                                 setUsername,
-                                setFailLoginReason,
-                                closeModal:()=>{setLoginModalShouldOpen(false)}
+                                setFailReason,
+                                closeModal
                             })
                         }}>
                             התחברות
                     </button>
+                    <button type="button" className="toggle-modal-btn" onClick={()=>{
+                        setLoginModalParams({
+                            ...loginModalParams,
+                            isSignIn:false
+                        })
+                    }}>
+                        הירשם
+                    </button>
                 </form>
-                <div className="horizontal-line"></div>
-                <div className="fail-reason-sign-up-container">
-                    <h2>{failSignUpReason}</h2>
-                </div>
-                <form className="sign-up-form">
+                <form className={"sign-up-form"+(!loginModalParams.isSignIn?" real-height":"")}>
+                    <h3>הרשמה</h3>
                     {Object.keys(inputsObj.signUp).map((field)=>(
                          <div className="modal-input2" key={inputsObj.signUp[field].key}>
                             <label>
@@ -134,11 +146,19 @@ function LoginModal({setLoginModalShouldOpen,setUsername}){
                                 setInputsObj,
                                 setRole,
                                 setUsername,
-                                setFailSignUpReason,
-                                closeModal:()=>{setLoginModalShouldOpen(false)}
+                                setFailReason,
+                                closeModal
                             })
                         }}>
                             הרשמה
+                    </button>
+                    <button type="button" className="toggle-modal-btn" onClick={()=>{
+                        setLoginModalParams({
+                            ...loginModalParams,
+                            isSignIn:true
+                        })
+                    }}>
+                        התחבר
                     </button>
                 </form>
             </div>

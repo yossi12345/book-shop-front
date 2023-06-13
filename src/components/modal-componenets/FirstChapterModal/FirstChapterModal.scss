@@ -1,0 +1,33 @@
+.first-chapter-modal{
+    background-color: white;
+    width:calc(100vw - 50px);
+    max-width: 80ch;
+    height:calc(100vh - 50px);
+    .first-chapter{
+        overflow: auto;
+        color: black;
+        height: calc(100% - 80px);
+        font-size: 20px;
+        padding: 10px 30px;
+    }
+    .upper-part{
+        background-color: black;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:10px 20px;
+        button{
+            padding: 0;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            &:hover{
+                transform: scale(1.1);
+            }
+        }
+        img{
+            height: 100%;
+        }
+    }
+}

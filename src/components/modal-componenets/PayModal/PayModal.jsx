@@ -25,6 +25,7 @@ function PayModal(props){
             placeholder:""
         }
     })
+    const [inValidExpiredMessage,setInValidExpiredMessage]=useState("")
     const [failBuyingMessage,setFailBuyingMessage]=useState(null)
     function handleInputChange(inputField,userInput){
         if (userInput!==""&&!(/^(0|[1-9]\d*)$/.test(userInput)))
@@ -38,10 +39,11 @@ function PayModal(props){
         event.preventDefault()
         const creditDetails={}
         let isValidDetails=true
-        const creditNumberRegex=/^(?:3[47]\d{13}|(?:4|5[1-5])\d{14}|(?:6011|622(?:1(?:2[6-9]|[3-9]\d)|[2-8]\d{2}|9(?:[01]\d|2[0-5])))\d{12}|(?:3(?:0[0-5]|[68]\d)\d{11}))$/;
+        const inputCopy={...inputs}
+        const creditNumberRegex=/^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/;
         if (!creditNumberRegex.test(inputs.creditNumber.value)){
-            inputs.creditNumber.placeholder="יש להכניס מספר כרטיס תקין"
-            inputs.creditNumber.value=""
+            inputCopy.creditNumber.placeholder="יש להכניס מספר כרטיס תקין"
+            inputCopy.creditNumber.value=""
             isValidDetails=false
         }
         else
@@ -55,10 +57,9 @@ function PayModal(props){
             expiredYearInput<currentYear||
             (expiredYearInput===currentYear&&expiredMonthInput<=currentMonth)
         ){
-            inputs.expiredMonth.placeholder="יש להכניס תוקף תקין"
-            inputs.expiredMonth.value=""
-            inputs.expiredYear.placeholder="יש להכניס תוקף תקין"
-            inputs.expiredYear.value=""
+            setInValidExpiredMessage("*יש להכניס תוקף תקין")
+            inputCopy.expiredMonth.value=""
+            inputCopy.expiredYear.value=""
             isValidDetails=false
         }
         else{
@@ -66,14 +67,16 @@ function PayModal(props){
             creditDetails.expiredYear=expiredYearInput
         }
         if (inputs.numbersInBack.value.length!==3){
-            inputs.numbersInBack.value=""
-            inputs.numbersInBack.placeholder="יש להכניס 3 ספרות תקינות"
+            inputCopy.numbersInBack.value=""
+            inputCopy.numbersInBack.placeholder="יש להכניס 3 ספרות תקינות"
             isValidDetails=false
         }
         else
             creditDetails.numbersInBack=inputs.numbersInBack.value
-        if (!isValidDetails)
+        if (!isValidDetails){
+            setInputs(inputCopy)
             return 
+        }
         const buyingSucceed=await buyBooks()
         if (!buyingSucceed){
             setFailBuyingMessage("אנחנו מצטערים לא הצלחנו לבצע את הקנייה")
@@ -127,6 +130,9 @@ function PayModal(props){
                                 onChange={(event)=>{
                                     handleInputChange("expiredMonth",event.target.value)
                             }}/>
+                        </div>
+                        <div className="fail-message">
+                            {inValidExpiredMessage}
                         </div>
                     </div>
                     <div>

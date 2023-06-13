@@ -1,77 +1,77 @@
 @use "src/variables-and-mixins/screen-width.scss" as *;
 .login-modal{
     background-color: white;
-    width: 310px;
-    height: calc(100% - 100px);
+    width: 300px;
+    height: fit-content;
     max-height: 477px;
     border: 5px solid black;
     position: relative;
-    border-radius: 5px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
-    gap:65px;
-    padding:50px 12px 7px 12px;
+    padding:30px 12px 7px 12px;
     overflow: auto;
-    .horizontal-line{
-        border-bottom: 2px dashed blue;
-        width: calc(100% - 10px);
-        position: absolute;
-        top:152px;
-        left: 3px;
-        @media (min-width:$w750) {
-            top:175px;
-        }
-    }
     form{
         display: flex;
         align-items: center;
         flex-direction: column;
+        justify-content: center;
         gap:10px;
     }
-    .login-form{
-        height: 116.67px;
+    @media (min-width:$w750) and (min-height:400px) { 
+        width: 400px;
     }
-    .sign-up-form{
-        height: 206.67px;
+    .submit-button{
+      margin:5px 64px 5px 0;
+
     }
-    @media (min-width:$w750) {
-        align-items: center;
-        width: 650px; 
+    h3{
+        margin:0 50px 10px 0;
     }
 }
-.fail-reason-sign-up-container,.fail-reason-login-container{
+.login-form,.sign-up-form{
+    overflow: hidden;
+    height: 0;
+    transition: height 0.3s ease;
+}
+.toggle-modal-btn{
+    background-color: transparent;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+    margin-right: 64px;
+}
+.real-height{
+    height: 282px; 
+    @media (min-width:$w750) and (min-height:400px) {
+        height: 372px; 
+    }
+}
+.fail-reason-container{
     text-align: center;
-    width: calc(100% - 20px);
+    width: 95%;
     position: absolute;
     color: red;
+    top:25px;
     h2{
         margin: 0;
         font-size: 18px;
-        @media (min-width:$w750) {
+        @media (min-width:$w750) and (min-height:400px) {
             font-size: 25px;
         }
-    }
-}
-.fail-reason-login-container{
-    top:5px;
-}
-.fail-reason-sign-up-container{
-    top:155px;
-    @media (min-width:$w750) {
-        top:181px;
     }
 }
 .modal-input2{
     display: flex;
     font-size: 13px;
     width: fit-content;
-    @media (min-width:$w750) {
+    @media (min-width:$w750) and (min-height:400px) {
         font-size: 20px;
         align-items: center;
     }
     label{
         width: 70px;
-        @media (min-width:$w750) {
+        @media (min-width:$w750) and (min-height:400px) {
             width: 100px;
         }
     }
@@ -79,8 +79,12 @@
         height: 20px;
         &::placeholder{
             color: red;
+            font-size: 8px;
+            @media (min-width:$w750) and (min-height:400px) {
+                font-size: 16px;
+            }
         }
-        @media (min-width:$w750) {
+        @media (min-width:$w750) and (min-height:400px) {
             height: 30px;
             width: 250px;
         }

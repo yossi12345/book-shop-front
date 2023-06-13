@@ -27,33 +27,33 @@ export async function handleCreateOrEditBook(params){
         return
     }
     let isAllInputsValid=true
-    const name=params.inputsObj.name.value.trim()
-    const discount=params.inputsObj.discount.value.trim()===""?"":params.inputsObj.discount.value*1
-    const author=params.inputsObj.author.value.trim()
-    const price=params.inputsObj.price.value.trim()===""?"":params.inputsObj.price.value*1
-    const description=params.textareasObj.description.value.trim()
-    const firstChapter=params.textareasObj.firstChapter.value.trim()
+    const name=params.inputsParams.name.value.trim()
+    const discount=params.inputsParams.discount.value.trim()===""?"":params.inputsParams.discount.value*1
+    const author=params.inputsParams.author.value.trim()
+    const price=params.inputsParams.price.value.trim()===""?"":params.inputsParams.price.value*1
+    const description=params.descriptionParams.value.trim()
+    const firstChapter=params.firstChapter.trim()
     const genre=params.selectValue
     const bookCover=params.bookCover
-    const inputsObjCopy={...params.inputsObj}
-    const textareasObjCopy={...params.textareasObj}
+    const inputsParamsCopy={...params.inputsParams}
+    const descriptionParamsCopy={...params.descriptionParams}
     if (discount!==""&&!(discount>=0&&discount<=100))
-        handleInvalidInput(inputsObjCopy.discount,"*הנחה חייבת להיות מספר בין 0 ל100")
+        handleInvalidInput(inputsParamsCopy.discount,"*הנחה חייבת להיות מספר בין 0 ל100")
     if (price===""||!(price>=0))
-        handleInvalidInput(inputsObjCopy.price,"*חובה להכניס מספרים גדולים מ-0")
+        handleInvalidInput(inputsParamsCopy.price,"*חובה להכניס מספרים גדולים מ-0")
     if (name==="")
-        handleInvalidInput(inputsObjCopy.name)
+        handleInvalidInput(inputsParamsCopy.name)
     if (author==="")
-        handleInvalidInput(inputsObjCopy.author)
+        handleInvalidInput(inputsParamsCopy.author)
     if (!params.isEdit&&!bookCover){
         isAllInputsValid=false
         params.setGenericModalParams({content:"יש לבחור כריכה לספר"})  
     }
     if (description==="")
-        handleInvalidInput(textareasObjCopy.description)
+        handleInvalidInput(descriptionParamsCopy)
     if (!isAllInputsValid){
-        params.setInputsObj(inputsObjCopy)
-        params.setTextareasObj(textareasObjCopy)
+        params.setInputsObj(inputsParamsCopy)
+        params.setDescriptionParams(descriptionParamsCopy)
         return 
     }
     try{
@@ -81,13 +81,18 @@ export async function handleCreateOrEditBook(params){
             const {data:savedBook}=await axios.post(process.env.REACT_APP_BASIC_URL+"new-book",newBook,{headers})
          
             await axios.patch(process.env.REACT_APP_BASIC_URL+"upload-book-cover?_id="+savedBook._id,{bookCover},{headers:headerForImageUpload})
-            for (const key in params.inputsObj)
-                inputsObjCopy[key].value=""
-            for (const key in params.textareasObj)
-                textareasObjCopy[key].value=""
-            params.setInputsObj(inputsObjCopy)
-            params.setTextareasObj(textareasObjCopy)
+            for (const key in params.inputsParams){
+                inputsParamsCopy[key].value=""
+                inputsParamsCopy[key].placeholder=""
+            }
+            params.setDescriptionParams({
+                ...params.descriptionParams,
+                value:"",
+                placeholder:""
+            })
+            params.setinputsParams(inputsParamsCopy)
             params.setBookCover(null)
+            params.setFirstChapter("")
             params.setGenericModalParams({content:"הספר נוצר בהצלחה"})   
         }      
     }catch(err){

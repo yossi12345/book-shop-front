@@ -8,7 +8,6 @@ import {BsCartDash} from "react-icons/bs"
 import { CartItems, SetCartItems } from "../CartItemsContext/CartItemsContext"
 import { useNavigate } from "react-router-dom"
 import { handleUpdateBook } from "../handleUpdateBook"
-import axios from "axios"
 import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
 import { handleDeleteBook } from "../handleDeleteBook"
 import { createDiscount } from "../createDiscount"
@@ -30,13 +29,22 @@ function BookDetails({book,setShouldFirstChapterModalOpen,deleteBookRealTime,upd
     return (
         <>
             <div>
-                שם הספר:{" "+book.name}
+                <u>
+                    שם הספר:
+                </u>
+                {" "+book.name}
             </div>
             <div>
-                מאת:{" "+book.author}
+                <u>
+                    מאת:
+                </u>
+                {" "+book.author}
             </div>
             <div>
-                ז'אנר:{" " +book.genre}
+                <u>
+                    ז'אנר:
+                </u>
+                {" " +book.genre}
             </div>
             {!book.discount>0&&
                 <div>
@@ -111,7 +119,7 @@ function BookDetails({book,setShouldFirstChapterModalOpen,deleteBookRealTime,upd
                                 confirmButtonContent:"צור הנחה",
                                 cancelButtonNeeded:true,
                                 confirmFunc:({closeGenericModal})=>{
-                                    createDiscount({...params,discountInputRef,closeGenericModal})
+                                    createDiscount({params,discountInputRef,closeGenericModal})
                                 }
                             })
                         }}>
@@ -151,7 +159,9 @@ function BookDetails({book,setShouldFirstChapterModalOpen,deleteBookRealTime,upd
             }
             <div>
                 <p>
-                    תיאור:
+                    <u>
+                        תיאור:
+                    </u>
                 </p>
                 <div className={
                     (/[א-ת]/.test(book.description))?"":"english"

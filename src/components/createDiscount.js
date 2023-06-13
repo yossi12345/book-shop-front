@@ -1,5 +1,5 @@
 import { handleUpdateBook } from "./handleUpdateBook"
-export function createDiscount(discountInputRef,closeGenericModal,params){
+export function createDiscount({discountInputRef,closeGenericModal,params}){
     const discountString=discountInputRef.current.value.trim()
     if (discountString===""){
         discountInputRef.current.value=""

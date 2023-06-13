@@ -7,6 +7,7 @@ import { useContext } from "react"
 import { Role,SetRole } from "../RoleContext1"
 import {  ROLE_TYPES } from "../../global-constants"
 import {Link, NavLink, useLocation, useNavigate } from "react-router-dom"
+
 function Header(props){
     const location=useLocation()
     const setRole=useContext(SetRole)
@@ -37,18 +38,30 @@ function Header(props){
                     <CartButton setShouldPayModalOpen={props.setShouldPayModalOpen}/>
                 }
                 {role===ROLE_TYPES.guest?
-                    <button onClick={()=>{
-                        props.setLoginModalShouldOpen(true)
+                    <button className="login-button" onClick={()=>{
+                        props.openLoginModal(true)
                     }}>
                         <RxPerson size="100%"/>
+                        <div className="login-select" onClick={event=>{event.stopPropagation()}}>
+                            <div onClick={()=>{
+                                props.openLoginModal(true)
+                            }}>
+                                התחברות
+                            </div>
+                            <div onClick={()=>{
+                                props.openLoginModal(false)
+                            }}>
+                                הרשמה
+                            </div>
+                        </div>
                     </button>:
                     <button onClick={()=>{
+                        if (role===ROLE_TYPES.admin)
+                            navigate("/admin",{replace:true})
+                        else if (location.pathname==="/edit-account")
+                            navigate("/",{replace:true})
                         setRole(ROLE_TYPES.guest)
-                        sessionStorage.removeItem("token")
-                        const route=location.pathname.split("/")[1]
-                        const forbiddenRoutesForGuest=["create-book","edit-book","edit-account"]
-                        if (forbiddenRoutesForGuest.includes(route)) 
-                            navigate((role===ROLE_TYPES.admin?"/admin":"/"),{replace:true})
+                        sessionStorage.removeItem("token")       
                     }}>
                         <GiEntryDoor size="100%"/>
                     </button>

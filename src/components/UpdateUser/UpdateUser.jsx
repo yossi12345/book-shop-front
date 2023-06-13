@@ -5,8 +5,7 @@ import LoadingPage from "../LoadingPage/LoadingPage"
 import { useNavigate } from "react-router-dom"
 import { useContext } from "react"
 import { Role, SetRole } from "../RoleContext1"
-import { changeInputTextOrPassword, handleAuth, handleDeleteUser, handleUpdateEmail, handleUpdatePassword, handleUpdateUsername } from "./UpdateUser-functions"
-import DeleteUserModal from "../modal-componenets/DeleteUserModal/DeleteUserModal"
+import {  handleAuth, handleDeleteUser,handleUpdateUser } from "./UpdateUser-functions"
 import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
 function UpdateUser(props){
     const setGenericModalParams=useContext(SetGenericModalParams)
@@ -42,7 +41,7 @@ function UpdateUser(props){
         setInputsState,
         role,
         setRole,
-        setLoginModalShouldOpen:props.setLoginModalShouldOpen,
+        openLoginModal:props.openLoginModal,
         navigate
     }
     useEffect(()=>{
@@ -63,7 +62,7 @@ function UpdateUser(props){
         return (
             <form className="edit-account-form" onSubmit={(event)=>{
                 event.preventDefault()
-                handleUpdateUsername({
+                handleUpdateUser({
                     ...params,
                     setUsername:props.setUsername,
                     setGenericModalParams
@@ -179,7 +178,7 @@ function UpdateUser(props){
                                 navigate,
                                 role,
                                 setRole,
-                                setLoginModalShouldOpen:props.setLoginModalShouldOpen,
+                                openLoginModal:props.openLoginModal,
                                 setGenericModalParams
                             })
                         }

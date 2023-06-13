@@ -18,6 +18,10 @@ function BooksSearcher(props){
                     props.setInputValue(event.target.value)
                     console.log("lkkl")
                 }}
+                onKeyUp={(event)=>{
+                    if (event.key==="Enter")
+                        setShouldPossibleBookNamesOpen(false)
+                }}
             />
             {shouldPossibleBookNamesOpen&&props.possibleBookNames.length>0&&
                 <div className="possible-book-names-container">

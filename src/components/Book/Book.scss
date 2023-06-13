@@ -6,6 +6,7 @@
     display: grid;
     grid-template-rows: 25% 50% 25%;
     cursor: pointer;
+    transition: transform 0.5s ease;
     img{
         width: 100%;
         height:100%;
@@ -22,7 +23,8 @@
         //line-height: 0.9;
     }
     &:hover{
-        filter:brightness(45%);
+        transform: scale(1.15);
+        z-index: 1;
         .book-buttons-container{
             height:15%;
         }
@@ -51,6 +53,9 @@
         cursor: pointer;
         background-color: transparent;
         border: none;
+        &:hover{
+            transform: scale(1.2);
+        }
     }
     .not-icon-btn{
         background-color: greenyellow;

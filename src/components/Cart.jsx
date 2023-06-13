@@ -14,17 +14,14 @@ function Cart({containerClass,cartSize}){
         ),0)
     },[cartItems,role])
     return (
-        <button className={containerClass}>
+        <button className={containerClass+" relative"}>
             <GiShoppingCart size={cartSize}/>
-            <div>
-              
-                <img src={booksPile} alt="books amount"/>
+            <div className="books-amount">
                 {cartItems.length}
             </div>
             <div>
                 <img src={shekelSign} alt="total price"/>
-                {totalPrice.toLocaleString("en-US",{maximumFractionDigits:2})}
-            
+                {totalPrice.toLocaleString("en-US",{maximumFractionDigits:2})} 
             </div>
         </button>
     )

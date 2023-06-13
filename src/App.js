@@ -10,7 +10,6 @@ import Confetti from "react-confetti"
 import NotFoundPage from './components/NotFoundPage/NotFoundPage';
 import AdminForm from './components/AdminForm/AdminForm';
 import RoleContext1 from './components/RoleContext1';
-import CreateBookModal from './components/modal-componenets/CreateBookModal/CreateBookModal';
 import CartItemsContext from './components/CartItemsContext/CartItemsContext';
 import { GUEST_NAME } from './global-constants';
 import BookPage from './components/BookPage/BookPage';
@@ -20,18 +19,27 @@ import UpdateUser from './components/UpdateUser/UpdateUser';
 import GenericModal from './components/modal-componenets/GeneiclModal/GenericModal';
 import {HiHome} from "react-icons/hi"
 function App() {
-  const [loginModalShouldOpen,setLoginModalShouldOpen]=useState(false)
+  const [loginModalParams,setLoginModalParams]=useState({
+    shouldOpen:false,
+    isSignIn:true
+  })
+  function openLoginModal(isSignIn){
+    setLoginModalParams({
+      shouldOpen:true,
+      isSignIn
+    })
+  }
   const [shouldPayModalOpen,setShouldPayModalOpen]=useState(false)
   const [shouldRunConfetti,setShouldRunConfetti]=useState(false)
-  const [shouldCreateBookModalOpen,setShouldCreateBookModalOpen]=useState(false)
   const [username,setUsername]=useState(GUEST_NAME)
   return (
     <GenericModal>
-      <RoleContext1 setLoginModalShouldOpen={setLoginModalShouldOpen} setUsername={setUsername}>
+      <RoleContext1 openLoginModal={openLoginModal} setUsername={setUsername}>
         <CartItemsContext>
-          {loginModalShouldOpen&&<LoginModal
+          {loginModalParams.shouldOpen&&<LoginModal
             setUsername={setUsername} 
-            setLoginModalShouldOpen={setLoginModalShouldOpen}
+            setLoginModalParams={setLoginModalParams}
+            loginModalParams={loginModalParams}
           />}
           {shouldPayModalOpen&&<PayModal 
               setShouldPayModalOpen={setShouldPayModalOpen}
@@ -44,13 +52,9 @@ function App() {
             </div>
           }
           <BrowserRouter>
-            {shouldCreateBookModalOpen&&<CreateBookModal
-                setShouldCreateBookModalOpen={setShouldCreateBookModalOpen}
-            />}
               <Header 
-                setLoginModalShouldOpen={setLoginModalShouldOpen} 
+                openLoginModal={openLoginModal} 
                 setShouldPayModalOpen={setShouldPayModalOpen}
-                setShouldCreateBookModalOpen={setShouldCreateBookModalOpen}
                 username={username}
                 setUsername={setUsername}
               />
@@ -63,7 +67,7 @@ function App() {
                 <Route path="/create-book" element={<CreateBook setUsername={setUsername}/>}/>
                 <Route path="/edit-book/:bookId" element={<EditBook setUsername={setUsername}/>}/>
                 <Route path='/edit-account' element={<UpdateUser 
-                              setLoginModalShouldOpen={setLoginModalShouldOpen} 
+                              openLoginModal={openLoginModal} 
                               setUsername={setUsername}/>}
                 />
               </Routes>

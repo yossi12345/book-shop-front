@@ -38,14 +38,17 @@
 .validity-input-container{
     width:200px;
     margin-right: 45px;
-    &> :last-child{
-        display: flex;
-        gap:2px;
-    }
+    position: relative;
     span{
         font-size: 20px;
     }
     input{
         width: 30%;
+    }
+    .fail-message{
+        color: red;
+        font-size: 10px;
+        position: absolute;
+        bottom: -12px;
     }
 }

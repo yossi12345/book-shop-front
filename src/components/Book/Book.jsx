@@ -40,7 +40,7 @@ function Book({book,deleteBookRealTime,updateBookRealTime}){
     },[cartItems])
     const actualBookPrice=useMemo(()=>{
         return getActualBookPrice(book,role).toLocaleString("en-US",{maximumFractionDigits:2})
-    },[role])
+    },[role,book])
     return (
         <div className="book" >
             <label className="label">
@@ -78,10 +78,10 @@ function Book({book,deleteBookRealTime,updateBookRealTime}){
                                  ללא
                                 זמין
                             </button>:
-                            <button onClick={()=>{//הפוך לזמין
+                            <button  className="not-icon-btn" onClick={()=>{//הפוך לזמין
                                 handleUpdateBook({...params,update:{available:true}})
                             }}>
-                                <TbTrashOff color="white" size={25}/>
+                                הפוך לזמין
                             </button>
                         }
                         <button onClick={()=>{
@@ -113,8 +113,8 @@ function Book({book,deleteBookRealTime,updateBookRealTime}){
                                         </form>,
                                     confirmButtonContent:"צור הנחה",
                                     cancelButtonNeeded:true,
-                                    confirmFunc:(closeGenericModal)=>{
-                                        createDiscount(discountInputRef,closeGenericModal,params)
+                                    confirmFunc:({closeGenericModal})=>{
+                                        createDiscount({discountInputRef,closeGenericModal,params})
                                     }
                                 })
                             }}>
@@ -141,16 +141,16 @@ function Book({book,deleteBookRealTime,updateBookRealTime}){
             <label className="label">
                 {role===ROLE_TYPES.admin?
                     <>
-                        {"מחיר אמיתי: "+book.price}
+                        {"מחיר אמיתי: "+book.price.toLocaleString("en-US",{maximumFractionDigits:2})}
                             <br/>
-                        {"מחיר לאחר הנחה: "+actualBookPrice}
+                        {"מחיר לאחר הנחה: "+actualBookPrice.toLocaleString("en-US",{maximumFractionDigits:2})}
                     </>:
                     <>
                         {!book.deleted&&amountOfThisBookInCart>0&&
                             <>
                                 {"כמות ספרים בעגלה: "+amountOfThisBookInCart}
                                 <br/>
-                                {"מחיר  כולל: "+amountOfThisBookInCart*actualBookPrice}
+                                {"מחיר  כולל: "+(amountOfThisBookInCart*actualBookPrice).toLocaleString("en-US",{maximumFractionDigits:2})}
                                 <br/>
                             </>
                         }

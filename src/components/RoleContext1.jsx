@@ -5,7 +5,7 @@ import { ROLE_TYPES,GUEST_NAME } from "../global-constants";
 import { SetGenericModalParams } from "./modal-componenets/GeneiclModal/GenericModal";
 export const Role=createContext()
 export const SetRole=createContext()
-function RoleContext1({children,setLoginModalShouldOpen,setUsername}){
+function RoleContext1({children,openLoginModal,setUsername}){
     const [role1,setRole1]=useState(ROLE_TYPES.guest)
     const setGenericModalParams=useContext(SetGenericModalParams)
     useEffect(()=>{
@@ -31,21 +31,21 @@ function RoleContext1({children,setLoginModalShouldOpen,setUsername}){
         try{
             if (!newRole)
                 throw new Error()
-            const {data}=await axios.get(process.env.REACT_APP_BASIC_URL+newRole+"-verify-token"
+            const {data:{username,isValidToken}}=await axios.get(process.env.REACT_APP_BASIC_URL+newRole+"-verify-token"
             ,{
                 headers: {
                     "Authorization":"Bearer "+token,
                     'Content-Type': 'application/json'
                 }})
-            console.log("tgrt",data,newRole)
-            if (!data.isValidToken)
+            console.log("tgrt",newRole)
+            if (!isValidToken)
                 throw new Error()
             setRole1(newRole)   
-            setUsername(data.username)
+            setUsername(username)
         }catch(err){
             console.log(err)
             sessionStorage.removeItem("token")
-            setLoginModalShouldOpen(true)
+            openLoginModal(true)
             setGenericModalParams({content:"התנקת לנו אתה מוזמן להתחבר שוב"})
             setRole1(ROLE_TYPES.guest)
         }

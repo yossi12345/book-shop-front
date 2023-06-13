@@ -4,11 +4,10 @@ import axios from "axios"
 import Book from "../Book/Book"
 import "./BookPage.scss"
 import BookDetails from "./BookDetails"
-import FirstChapterModal1 from "./FirstChapterModal1"
 import LoadingPage from "../LoadingPage/LoadingPage"
 import { useContext } from "react"
 import { SetGenericModalParams } from "../modal-componenets/GeneiclModal/GenericModal"
-
+import FirstChapterModal from "../modal-componenets/FirstChapterModal/FirstChapterModal"
 function BookPage(){
     const {bookId}=useParams()
     const navigate=useNavigate()
@@ -18,7 +17,6 @@ function BookPage(){
     const setGenericModalParams=useContext(SetGenericModalParams)
     useEffect(()=>{
         handleSetBook()
-        console.log("11")
     },[])
     function deleteBookRealTime(){
         navigate(-1,{replace:true})
@@ -58,29 +56,24 @@ function BookPage(){
         return (
             <>
                 {shouldFirstChapterModalOpen&&
-                    <FirstChapterModal1 book={book} setShouldFirstChapterModalOpen={setShouldFirstChapterModalOpen}/>
+                    <FirstChapterModal firstChapter={book.firstChapter} closeModal={()=>{setShouldFirstChapterModalOpen(false)}}/>
                 }
-                <table className="book-page-container">
-                    <tbody>
-                        <tr>
-                            <td className="book-container">
-                                <Book book={book} 
-                                    deleteBookRealTime={deleteBookRealTime}
-                                    updateBookRealTime={updateBookRealTime}
-                                />
-                            </td>
-                            <td></td>
-                            <td className="book-details">
-                                {!book.available&&<h1>הספר לא זמין למכירה כרגע</h1>}
-                                <BookDetails book={book} 
-                                    setShouldFirstChapterModalOpen={setShouldFirstChapterModalOpen}
-                                    deleteBookRealTime={deleteBookRealTime}
-                                    updateBookRealTime={updateBookRealTime}
-                                />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div className="book-page-container">    
+                    <div >
+                        <Book book={book} 
+                            deleteBookRealTime={deleteBookRealTime}
+                            updateBookRealTime={updateBookRealTime}
+                        />
+                    </div>
+                    <div className="book-details">
+                        {!book.available&&<h1>הספר לא זמין למכירה כרגע</h1>}
+                        <BookDetails book={book} 
+                            setShouldFirstChapterModalOpen={setShouldFirstChapterModalOpen}
+                            deleteBookRealTime={deleteBookRealTime}
+                            updateBookRealTime={updateBookRealTime}
+                        />
+                    </div> 
+                </div>
             </>
         )
     }

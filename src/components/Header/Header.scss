@@ -30,8 +30,47 @@ header{
 }
 .hi-username{
     font-weight: 700;
-    font-size: 18px;
+    font-size: 11px;
     text-align: center;
+    @media (min-width:$w510) {
+        font-size: 18px;
+        
+    }
+}
+.login-button{
+    position: relative;
+    &:hover{
+        .login-select{
+            display: flex;
+        }
+    }
+}
+.login-select{
+    background-color: white;
+    border-radius: 10px;
+    display: none;
+    justify-content: center;
+    flex-direction: column;
+    height: 100px;
+    width: fit-content;
+    padding: 5px;
+    position: absolute;
+    gap:10px;
+    top:66px;
+    left: 5px;
+    box-shadow:2px 2px 4px 0 rgba(0, 0, 0, 0.4); ;
+    div{
+        padding: 5px;
+        border-radius: 20px;
+        color: white;
+        font-weight: 800;
+        font-size: 17px;
+        background-color: red;
+        width: 88px;
+        &:hover{
+            background-color: green;
+        }
+    }
 }
 .header-left-buttons-container{
     display: flex;
@@ -43,6 +82,9 @@ header{
         background-color: transparent;
         width: 50px;
         height: 50px;
+        &:hover{
+            color: brown;
+        }
         @media (min-width:$w510) {
             width: 70px;
             height: 70px;

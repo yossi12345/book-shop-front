@@ -6,7 +6,11 @@
         font-weight: bold;
         height: 25%;
         display: flex;
+        align-items: center;
         gap:5px;
+        font-size: 11px;
+        margin-top: -8px;
+        margin-right: 10px;
     }
     img{
       height: 100%;
@@ -17,5 +21,30 @@
     &>:first-child{
         display: none;
     }
-    
+    &:hover{
+        .buy-books-label{
+            display: block
+        }
+    } 
+}
+.buy-books-label{
+    width: 70px;
+    position: relative;
+    bottom: 18px;
+    right: -15px;
+    display: none;
+    @media (min-width:510px) {
+        bottom: 28px;
+        right: -3px;
+    }
+    &>:first-child{
+        background-color: transparent;
+    }
+    &>:last-child{
+        background-color: wheat;
+        margin-top: -6px;
+        &:hover{
+            background-color: yellow;
+        }
+    }
 }
